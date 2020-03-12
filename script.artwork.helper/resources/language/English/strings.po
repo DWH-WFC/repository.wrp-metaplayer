@@ -1,0 +1,15 @@
+# Kodi Media Center language file
+# Addon Name: Artwork Helper
+# Addon id: service.artwork.helper
+msgid ""
+msgstr ""
+
+# header for the option below
+msgctxt "#32000"
+msgid "Not needed if using Artwork Beef"
+msgstr ""
+
+# setting that can be toggled on/off
+msgctxt "#32001"
+msgid "Grab extrafanart/extrathumbs if single image in library"
+msgstr ""

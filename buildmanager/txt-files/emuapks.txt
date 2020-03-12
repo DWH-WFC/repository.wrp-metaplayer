@@ -1,0 +1,29 @@
+
+
+name="NES Apk"
+url="http://wrp-world.net/wrp/apk/emuapks/NES.apk"
+icon="http://cdn2.bigcommerce.com/n-pktq5q/ymgqt/products/31166/images/27499/NES_Mario123_Quad__80665.1430492328.500.500.jpg?c=2"
+fanart="http://i.imgur.com/cMqRNXL.jpg"
+adult="no"
+description="Gaming Emulators"
+
+name="Mupen64 Apk"
+url="http://ftg.srve.io/apk/mupen64-plus-ae-2-4-4-multi-android.apk"
+icon="https://lh3.googleusercontent.com/p69wlD_-up-LJnmrSyfhkeQhQkB4mYbKzxOgWkzo9MDy3LWhhbT0_vN2tI09h83McA=w300"
+fanart="http://i.imgur.com/cMqRNXL.jpg"
+adult="no"
+description="Gaming Emulators"
+
+name="Atari Apk"
+url="http://ftg.srve.io/apk/com.androidemu.atari.apk"
+icon="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Atari_Official_2012_Logo.svg/220px-Atari_Official_2012_Logo.svg.png"
+fanart="http://i.imgur.com/cMqRNXL.jpg"
+adult="no"
+description="Gaming Emulators"
+
+name="Classic Boy multiple Emus Apk"
+url="http://ftg.srve.io/apk/ClassicBoy_Full_v2.0.3_.apk"
+icon="http://1.bp.blogspot.com/-lk7l8rhPZr8/VBs4Qr1Jr1I/AAAAAAAAAMU/FicDeSxI9P8/s1600/unnamed.png"
+fanart="http://i.imgur.com/cMqRNXL.jpg"
+adult="no"
+description="Gaming Emulators"

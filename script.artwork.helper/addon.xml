@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.artwork.helper" name="Artwork Helper" version="0.9.2~adev" provider-name="rrector">
+	<requires>
+		<import addon="xbmc.python" version="2.19.0" />
+		<import addon="xbmc.json" version="6.20.0" />
+		<import addon="xbmc.addon" version="17.0.0" />
+	</requires>
+	<extension point="xbmc.python.library" library="python/default.py" />
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Artwork Helper provides a couple of tools to skins and other add-ons for working with artwork.</summary>
+		<description lang="en">Artwork Helper provides a couple of tools to skins and other add-ons for working with artwork. See README.md for detailed usage.</description>
+		<disclaimer lang="en">Artwork Helper does not directly add functionality on its own and must be supported by skins or other add-ons.</disclaimer>
+		<source>https://github.com/rmrector/script.artwork.helper</source>
+		<forum>https://forum.kodi.tv/showthread.php?tid=236649</forum>
+		<news>
+v0.9.1 (2019-06-15)
+- Fix: add an image mime type so Kodi identifies image URLs without extensions
+- Fix: Kodi v19 Pyton 3 compatibility
+
+v0.9.0 (2018-03-25)
+- Feature: add a path to grab artwork from the currently playing item
+- Feature: add path option to grab artwork from multiple artists
+
+v0.8.0 (2017-11-08)
+- Update for Leia compatibility, Krypton is now lowest supported
+- remove `shuffle`
+		</news>
+		<license>The MIT License</license>
+		<platform>all</platform>
+		<language />
+		<website />
+		<email />
+		<assets />
+	</extension>
+</addon>
