@@ -10,6 +10,3 @@
 [submodule "script.wrpinfo"]
 	path = script.wrpinfo
 	url = https://github.com/DWH-WFC/script.wrpinfo.git
-[submodule "plugin.program.wrp.manager"]
-	path = plugin.program.wrp.manager
-	url = https://github.com/DWH-WFC/plugin.program.wrp.manager.git
