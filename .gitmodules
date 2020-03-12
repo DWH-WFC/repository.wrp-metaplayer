@@ -4,3 +4,6 @@
 [submodule "plugin.program.wrpwizard"]
 	path = plugin.program.wrpwizard
 	url = https://github.com/DWH-WFC/plugin.program.wrpwizard.git
+[submodule "plugin.video.wrp-metaplayer"]
+	path = plugin.video.wrp-metaplayer
+	url = https://github.com/DWH-WFC/plugin.video.wrp-metaplayer.git
