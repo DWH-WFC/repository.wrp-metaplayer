@@ -1,3 +1,6 @@
 [submodule "skin.aura.wrp"]
 	path = skin.aura.wrp
 	url = https://github.com/DWH-WFC/skin.aura.wrp.git
+[submodule "plugin.program.wrpwizard"]
+	path = plugin.program.wrpwizard
+	url = https://github.com/DWH-WFC/plugin.program.wrpwizard.git
