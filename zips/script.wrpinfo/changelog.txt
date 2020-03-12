@@ -1,0 +1,52 @@
+[B]Version 1.0.5~nightly1[/B]
+
+ - addon.xml überarbeitet (WRP-Metaplayer)
+ - update Readme.md 
+
+[B]Version 1.0.4 Release[/B]
+
+ - Übersetung überarbeitet
+ - bugfixes  
+ - Update Multigenres 
+
+[B]Version 1.0.4~nightly4[/B]
+
+ - Netflix Skin überarbeitet
+ - Skins Anpassung für Aeon Nox Silvo, Aura, Aura Mod, Estuary 
+
+[B]Version 1.0.4~nightly3[/B]
+
+ - Netflix Skin überarbeitet
+ - Skins überarbeitet 
+ - Skin Bug entfernt            
+
+[B]Version 1.0.4~nightly2[/B]
+
+ - Netflix Skin überarbeitet
+ - Netflix Actor Info hinzugefügt 
+ - Übersetzungen in deutsch        
+        
+[B]Version 1.0.4~nightly1[/B]
+
+ - Skins angepasst	
+ - Übersetzungen in deutsch
+		
+[B]Version 1.0.3[/B]
+
+ - Skins angepasst
+
+[B]Version 1.0.2[/B]
+
+ - Bibliotheks Fehler behoben
+ - Skins angepasst
+ - Übersetzungen in deutsch
+
+[B]Version 1.0.1[/B]
+
+ - WRP-MetaPlayer integriert
+ - Pfade angepasst
+ - Übersetzungen in deutsch
+
+[B]Version 1.0.0[/B]
+
+ - Initial Release

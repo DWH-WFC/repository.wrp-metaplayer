@@ -1,0 +1,84 @@
+
+[B]Version 1.0.9~nightly2[/B]
+- Update updateManager
+- added fixedzipfile 
+
+[B]Version 1.0.9~nightly1[/B]
+- Update TVDb Key
+
+[B]Version 1.0.8 Release[/B]
+- Updatemanger fixed THX an kasi45
+- Update service.py
+- Nur noch Releases über Repository
+- Nightlys bitte im Addon aktivieren bzw. deaktivieren
+
+[B]Version 1.0.8~nighty2[/B]
+- Bugfix behoben
+
+[B]Version 1.0.8~nighty1[/B]
+- Views geupdated
+- Settings.xml überarbeitet
+
+[B]Version 1.0.7 Release[/B]
+- TVDb Fix Serien Suche 
+- Filme Menü Suche hinzugefügt für Filme
+- Serien Menü Suche hinzugefügt für Serien
+- Settings.xml überarbeitet
+
+[B]Version 1.0.7~nightly4-8[/B]
+- Test
+
+[B]Version 1.0.7~nightly3[/B]
+- immer noch total buggy 
+
+[B]Version 1.0.7~nightly2[/B]
+- total buggy 
+
+[B]Version 1.0.7~nightly1[/B]
+- Kontextmenü angepasst 
+- Updatemanager erweitert
+        
+[B]Version 1.0.6[/B]
+- WRPinfo integriert 
+
+[B]Version 1.0.5~nightly5[/B]
+- fix some bugs
+        
+[B]Version 1.0.5~nightly4[/B]
+- fix menu_items
+
+[B]Version 1.0.5~nightly3[/B]
+- fix translations
+
+[B]Version 1.0.5~nightly2[/B]
+ - fix TMDb
+
+[B]Version 1.0.5~nightly1[/B]
+ - fix updateManager 
+
+[B]Version 1.0.4[/B]
+
+- Sprachen Auswahl für TMDb und TVDb
+- updateManager für WRP-MetaPlayer und UrlResolver
+    ( unter Einstellungen / Aktualisierungen )
+- some fixes
+
+[B]Version 1.0.3[/B]
+
+- Update Übersetzungen
+- Update Funktion der Player Aktualisierung
+
+[B]Version 1.0.2[/B]
+
+- Update Übersetzungen
+- Überflüssigen Programm Code entfernt
+
+[B]Version 1.0.1[/B]
+
+- Übersetzungen in deutsch angepasst
+- Tmdb und TVDB Links für deutschen Content überarbeitet
+- Player Dateien erstellt und integriert
+
+[B]Version 1.0[/B]
+
+- Initial Release

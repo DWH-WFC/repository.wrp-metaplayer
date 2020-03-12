@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<category label="Allgemein">
+		<setting label="Trailer" type="lsep"/>
+		<setting label="Trailer automatisch abspielen (betrifft nur die Netflix-Ansicht)" type="bool" enable="eq(-1,true)" id="autoplay_trailer"/>
+		<setting label="TMDB Einstellungen" type="lsep"/>
+		<setting label="Sprachinformationen von TMDB" type="select" values="bg|cs|da|de|el|en|es|fi|fr|he|hr|hu|it|ja|ko|nl|no|pl|pt|ru|sl|sv|tr|zh" id="LanguageID" default="de"/>
+		<setting label="P18 Inhalte mit einbeziehen?" type="bool" id="include_adults"/>
+        <setting label="API Schlüssel" id="tmdb_api" type="text" default=""/>
+		<setting label="Wartungseinstellungen" type="lsep"/>
+		<setting label="Cache entfernen" type="action" action="RunScript(script.wrpinfo,info=deletecache)"/>
+	</category>
+    <category label="Ansichten">
+		<setting label="GUI Oberfläche" type="lsep"/>
+		<setting label="Alternatives Browser-Layout (wirkt sich nicht auf alle Skins aus)" type="bool" id="alt_browser_layout"/>
+		<setting label="Netflix Ansicht" type="lsep"/>
+		<setting label="Netflix Style" type="bool" id="netflix_view"/>
+	</category>
+</settings>

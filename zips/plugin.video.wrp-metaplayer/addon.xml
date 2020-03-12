@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.9~nightly2" provider-name="DWH">
+    <requires>
+        <import addon="xbmc.python" version="2.25.0"/>
+        <import addon="metadata.tvdb.com" version="3.0.14"/>
+        <import addon="script.module.futures" version="2.2.0"/>
+        <import addon="script.module.requests" version="2.19.1"/>
+        <import addon="script.module.requests-cache" version="0.4.13"/>
+        <import addon="script.module.pydevd-pycharm" optional="true" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.service" library="service.py"/>
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context.py">
+                <label>WRP-MetaPlayer - Standard Player</label>
+                <visible>!String.StartsWith(ListItem.path,plugin://plugin.video.wrp-metaplayer/)+[String.IsEqual(ListItem.dbtype,episode)|String.IsEqual(ListItem.dbtype,movie)]</visible>
+            </item>
+            <item library="context2.py">
+                <label>WRP-MetaPlayer - Player Auswahl</label>
+                <visible>String.IsEqual(ListItem.dbtype,movie) | String.IsEqual(ListItem.dbtype,episode)</visible>
+            </item>
+        </menu>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary lang="de">TMDb, TVDb und Trakt Oberfläche mit Player Unterstützung</summary>
+        <description lang="de">Durchsuchen Sie die MovieDb, die TVDb, Trakt Datenbank und geben Sie die Informationen an die Bibliothek oder ein Addon weiter. Benötigt werden Player-Dateien und das entsprechende Addon, um die Dateien abzuspielen.</description>
+        <summary lang="en">TMDb, TVDb and Trakt surface with player support</summary>
+        <description lang="en">Browse The MovieDb, The TVDb, Trakt and pass info along to library or an addon. Needs player-files and the appropriate addon to play the files.</description>
+        <assets>
+            <icon>resources/art/icon.png</icon>
+            <fanart>resources/art/fanart.jpg</fanart>
+            <screenshot>resources/art/screenshot001.jpg</screenshot>
+            <screenshot>resources/art/screenshot002.jpg</screenshot>
+            <screenshot>resources/art/screenshot003.jpg</screenshot>
+            <screenshot>resources/art/screenshot004.jpg</screenshot>
+            <screenshot>resources/art/screenshot005.jpg</screenshot>
+            <screenshot>resources/art/screenshot006.jpg</screenshot>
+            <screenshot>resources/art/screenshot007.jpg</screenshot>
+            <screenshot>resources/art/screenshot008.jpg</screenshot>
+            <screenshot>resources/art/screenshot009.jpg</screenshot>
+        </assets>
+        <license>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</license>
+        <source>Source Code from Chaapai by Mr.Blamo and OpenMeta by OpenProject</source>
+        <news>THX an Kasi45 für deine super Hilfe
+
+[B]Version 1.0.9~nightly2[/B]
+- Update updateManager
+- added fixedzipfile 
+
+[B]Version 1.0.9~nightly1[/B]
+- Update TVDb Key
+
+[B]Version 1.0.8 Release[/B]
+- Updatemanger fixed THX an kasi45
+- Update service.py
+- Nur noch Releases über Repository
+- Nightlys bitte im Addon aktivieren bzw. deaktivieren
+
+[B]Version 1.0.8~nighty2[/B]
+- Bugfix behoben
+
+[B]Version 1.0.8~nighty1[/B]
+- Views geupdated
+- Settings.xml überarbeitet
+
+[B]Version 1.0.7 Release[/B]
+- TVDb Fix Serien Suche 
+- Filme Menü Suche hinzugefügt für Filme
+- Serien Menü Suche hinzugefügt für Serien
+- Settings.xml überarbeitet
+
+[B]Version 1.0.7~nightly4-8[/B]
+- Test
+
+[B]Version 1.0.7~nightly3[/B]
+- immer noch total buggy 
+
+[B]Version 1.0.7~nightly2[/B]
+- total buggy 
+
+[B]Version 1.0.7~nightly1[/B]
+- Kontextmenü angepasst 
+- Updatemanager erweitert
+        
+[B]Version 1.0.6[/B]
+- WRPinfo integriert 
+
+[B]Version 1.0.5~nightly5[/B]
+- fix some bugs
+        
+[B]Version 1.0.5~nightly4[/B]
+- fix menu_items
+
+[B]Version 1.0.5~nightly3[/B]
+- fix translations
+
+[B]Version 1.0.5~nightly2[/B]
+ - fix TMDb
+
+[B]Version 1.0.5~nightly1[/B]
+ - fix updateManager 
+
+[B]Version 1.0.4[/B]
+
+- Sprachen Auswahl für TMDb und TVDb
+- updateManager für WRP-MetaPlayer und UrlResolver
+    ( unter Einstellungen / Aktualisierungen )
+- some fixes
+
+[B]Version 1.0.3[/B]
+
+- Update Übersetzungen
+- Update Funktion der Player Aktualisierung
+
+[B]Version 1.0.2[/B]
+
+- Update Übersetzungen
+- Überflüssigen Programm Code entfernt
+
+[B]Version 1.0.1[/B]
+
+- Übersetzungen in deutsch angepasst
+- Tmdb und TVDB Links für deutschen Content überarbeitet
+- Player Dateien erstellt und integriert
+
+[B]Version 1.0[/B]
+
+- Initial Release
+        </news>
+        <platform>all</platform>
+    </extension>
+</addon>
