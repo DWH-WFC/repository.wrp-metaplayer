@@ -1,0 +1,18 @@
+certifi   ver 2019.6.16
+https://pypi.org/project/certifi/
+
+chardet   ver 3.0.4
+https://pypi.org/project/chardet/
+
+idna      ver 2.8
+https://pypi.org/project/idna/
+
+requests  ver 2.22.0
+https://pypi.org/project/requests/
+
+urllib3   ver 1.25.3
+https://pypi.org/project/urllib3/
+
+#############################
+### loki1979 - 04.09.2019 ###
+#############################

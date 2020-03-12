@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+	<category label="128">
+		<setting label="32000" type="lsep" />
+		<setting id="classicmulti" label="32001" type="bool" default="false" visible="true" />
+	</category>
+</settings>
