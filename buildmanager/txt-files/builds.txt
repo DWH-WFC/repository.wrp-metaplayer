@@ -1,20 +1,21 @@
 
+
 ############################ KODI 18 BUILDS ############################
 
-name="WRP Netflix Style Test"
-version="1.0.0"
-url="https://"
-minor="https://"
-gui="https://"
+name="Nightly Update"
+version="1.9.5"
+url="http://wrp-world.net/wrp/builds/leia/nightly/18.5Nightly1.9.5.zip"
+minor="http://"
+gui="http://wrp-world.net/wrp/builds/leia/nightly/18.5Nightly1.9.5_guisettings.zip"
 kodi="18.6"
-theme="http://"
-icon="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
-fanart="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
-preview="https://"
+theme="http://wrp-world.net/wrp/builds/leia/nightly/theme.txt"
+icon="http://wrp-world.net/wrp/images/leia/Nightly.jpg"
+fanart="http://wrp-world.net/wrp/images/leia/Nightly.jpg"
+preview="https://youtu.be/VNqiZdC9TTg"
 adult="no"
-info="https://"
+info="http://wrp-world.net/wrp/builds/leia/nightly/18.4Nightly1.9.4.txt"
 description=" 
- - 18.6 Leia Build fuer Android Systeme, PC oder Xbox One
- - Aura WRP Mod Theme"
+ - 18.6 Leia Image fuer Android Systeme, PC oder Xbox One
+ - Aeon Nox Silvo Mod Theme"
 
 ########################################################################
