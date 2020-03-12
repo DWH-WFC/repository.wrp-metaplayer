@@ -1,0 +1,71 @@
+<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.5">
+    <requires>
+        <import addon="xbmc.gui" version="5.14.0" />
+        <import addon="script.skinshortcuts" version="0.4.0" />
+        <import addon="script.wrpinfo" version="1.0.4" />
+        <import addon="script.image.resource.select" version="0.0.5" />
+        <import addon="plugin.program.autocompletion" version="1.0.1" />
+        <import addon="resource.images.studios.white" version="0.0.10" />
+        <import addon="resource.images.moviegenreicons.transparent" version="0.0.6" />
+    </requires>
+    <extension debugging="false" defaultthemename="Textures.xbt" effectslowdown="1" point="xbmc.gui.skin">
+        <res aspect="16:9" default="true" folder="1080i" height="1080" width="1920" />
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Minimalistic. Customisable. Multiple Widgets.</summary>
+        <summary lang="de_DE">Minimalistisch. Anpassbar. Mehrere Widgets.</summary>
+        <description lang="en_GB">Aura WRP Mod is highly customisable skin with multiple widgets and a horizontal home menu. Aura WRP Mod combines the minimalism and rounded edges of Arctic Zephyr with the sleek customisability of Horizon. Whilst the best Aura WRP Mod experience is had with a remote, Aura WRP Mod has been designed to accomodate mouse and touch users where possible.</description>
+        <description lang="de_DE">Aura WRP Mod ist eine anpassbare Skin Oberfläche mit mehreren Widgets und einem horizontalen Startmenü. Der Aura WRP Mod kombiniert den Minimalismus und die abgerundeten Kanten von Arctic Zephyr mit der schlanken Anpassbarkeit von Horizon. Während das beste Aura WRP Mod-Erlebnis mit einer Fernbedienung erzielt wird, wurde Aura WRP Mod entwickelt, um Maus- und Touch-Benutzer nach Möglichkeit unterzubringen.</description>
+        <platform>all</platform>
+        <license>Creative Commons Attribution Non-Commercial Share-Alike 4.0</license>
+        <forum></forum>
+        <source>Forked from Aura Skin</source>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+            <screenshot>resources/screenshot-00.jpg</screenshot>
+            <screenshot>resources/screenshot-01.jpg</screenshot>
+            <screenshot>resources/screenshot-02.jpg</screenshot>
+            <screenshot>resources/screenshot-03.jpg</screenshot>
+            <screenshot>resources/screenshot-04.jpg</screenshot>
+            <screenshot>resources/screenshot-05.jpg</screenshot>
+        </assets>
+        <news>
+
+[B]Version 1.0.5[/B]
+
+- WRP odi Buid Manager included
+- Powermenu updated
+- WRP Lounge added
+
+[B]Version 1.0.4[/B]
+
+- Update Languages
+- Update Skin Settings
+- WRP Addons included
+- Third Party Addon an Repository Shortcuts added
+- Dependencies revised
+
+[B]Version 1.0.3[/B]
+
+- Update Languages
+- Update Skin Settings
+
+[B]Version 1.0.2[/B]
+
+- Update Languages
+- Update Playlist Files
+
+[B]Version 1.0.1[/B]
+
+- Update Languages
+- Fix Bug
+- Poster Info added
+- Skin Intro included to special://skin/extras/intro.mp4
+
+[B]Version 1.0.0[/B]
+
+- Initial Release
+        </news>
+    </extension>
+</addon>

@@ -237,29 +237,6 @@ MfG WRP Team
    	</extension>
 </addon>
 
-<addon id="repository.wrp-metaplayer" name="WRP-MetaPlayer Repository" version="1.0.3" provider-name="DWH">
-	<extension point="xbmc.addon.repository" name="WRP-MetaPlayer Repository">
-		<info compressed="false">https://raw.github.com/DWH-WFC/repository.wrp-metaplayer/master/addons.xml</info>
-		<checksum>https://raw.github.com/DWH-WFC/repository.wrp-metaplayer/master/addons.xml.md5</checksum>
-		<datadir zip="true">https://raw.github.com/DWH-WFC/repository.wrp-metaplayer/master/zips/</datadir>
-	</extension>
-        <extension point="xbmc.addon.metadata">
-        <summary lang="de">WRP-MetaPlayer Repository</summary>
-        <description lang="de">WRP-MetaPlayer Repository</description>
-        <summary lang="en">WRP-MetaPlayer Repository</summary>
-        <description lang="en">WRP-MetaPlayer Repository</description>
-        <platform>all</platform>
-        <forum>https://gitter.im/WRP-Lounge/WRP-Metaplayer</forum>
-        <assets>
-            <icon>icon.png</icon>
-            <fanart>fanart.jpg</fanart>
-            <banner></banner>
-            <clearlogo></clearlogo>
-            <screenshot></screenshot>
-        </assets>
-   	</extension>
-</addon>
-
 <addon id="script.artwork.beef" name="Artwork Beef" version="0.28.1~adev" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
