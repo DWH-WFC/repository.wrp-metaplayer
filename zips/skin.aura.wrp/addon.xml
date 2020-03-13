@@ -1,4 +1,4 @@
-<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.5">
+<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.6">
     <requires>
         <import addon="xbmc.gui" version="5.14.0" />
         <import addon="script.skinshortcuts" version="0.4.0" />
@@ -32,9 +32,13 @@
         </assets>
         <news>
 
+[B]Version 1.0.6[/B]
+
+- WRP Kodi Buid Manager fixed
+
 [B]Version 1.0.5[/B]
 
-- WRP odi Buid Manager included
+- WRP Kodi Buid Manager included
 - Powermenu updated
 - WRP Lounge added
 

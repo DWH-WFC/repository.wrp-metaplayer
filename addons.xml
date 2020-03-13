@@ -78,7 +78,7 @@ MfG WRP Team
   </extension>
 </addon>
 
-<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.9~nightly2" provider-name="DWH">
+<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.9~nightly3" provider-name="DWH">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="metadata.tvdb.com" version="3.0.14"/>
@@ -125,6 +125,9 @@ MfG WRP Team
         <license>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</license>
         <source>Source Code from Chaapai by Mr.Blamo and OpenMeta by OpenProject</source>
         <news>THX an Kasi45 für deine super Hilfe
+
+[B]Version 1.0.9~nightly3[/B]
+- updateManager fixed THX Kasi45
 
 [B]Version 1.0.9~nightly2[/B]
 - Update updateManager
@@ -586,7 +589,7 @@ v0.8.0 (2017-11-08)
 	</extension>
 </addon>
 
-<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.5">
+<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.6">
     <requires>
         <import addon="xbmc.gui" version="5.14.0" />
         <import addon="script.skinshortcuts" version="0.4.0" />
@@ -620,9 +623,13 @@ v0.8.0 (2017-11-08)
         </assets>
         <news>
 
+[B]Version 1.0.6[/B]
+
+- WRP Kodi Buid Manager fixed
+
 [B]Version 1.0.5[/B]
 
-- WRP odi Buid Manager included
+- WRP Kodi Buid Manager included
 - Powermenu updated
 - WRP Lounge added
 

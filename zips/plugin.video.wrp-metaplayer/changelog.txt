@@ -1,4 +1,7 @@
 
+[B]Version 1.0.9~nightly3[/B]
+- updateManager fixed THX Kasi45
+
 [B]Version 1.0.9~nightly2[/B]
 - Update updateManager
 - added fixedzipfile 

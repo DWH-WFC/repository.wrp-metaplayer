@@ -1,4 +1,8 @@
 
+[B]Version 1.0.6[/B]
+
+- WRP Kodi Buid Manager fixed
+
 [B]Version 1.0.5[/B]
 
 - WRP odi Buid Manager included
