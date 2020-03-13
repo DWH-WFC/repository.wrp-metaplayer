@@ -3,9 +3,10 @@
 
 [B][COLOR red]Wichtige WRP Kodi Build Manager Informationen:[/COLOR][/B]
 
-Beim einspielen eines Builds werden sämtliche Addons und Einstellungen überschrieben. Nach der Build Installation arbeitet Kodi alle Einstellungen 
-selbstständig ab. Dies kann je nach Plattform etwas dauern aber der Skinwechsel sollte spätestens bis rechts oben "Erzwinge Addon Updates" des 
-WRP Kodi Build Managers erscheint vollzogen wurden sein. Ist dies nicht der Fall den Skin dann manuell in der Benutzeroberfläche aktivieren.
+Beim einspielen eines Builds werden sämtliche Addons und Einstellungen überschrieben. Nach der Build Installation arbeitet Kodi alle 
+Einstellungen selbstständig ab. Dies kann je nach Plattform etwas dauern aber der Skinwechsel sollte spätestens bis rechts oben 
+"Erzwinge Addon Updates" des WRP Kodi Build Managers erscheint vollzogen wurden sein. Ist dies nicht der Fall den Skin dann manuell 
+in der Benutzeroberfläche aktivieren.
 
 Bei der Installation eines aktuellen Builds ab Version 1.9 müssen nach erfolgreicher Installation noch einige Einstellungen vorgenommen 
 werden. Hierfür bitte folgende Informationen beachten und unbedingt diese 5 Schritte durchführen:
@@ -13,12 +14,14 @@ werden. Hierfür bitte folgende Informationen beachten und unbedingt diese 5 Sch
 [B][COLOR red]SCHRITT 1:[/COLOR] [COLOR cyan]Advanced Settings Datei installieren:[/COLOR][/B]
 
 Diese Datei ist sehr wichtig damit euer Kodi recht flüssig funktioniert. Hierfür habe ich euch schon diverse voreingestellte Versionen 
-für diverse Plattformen gebastelt. Geht für die Installation wie folgt vor: Geht nach rechts auf WRP Lounge --> klickt dann oben auf Erweiterte Kodi Konfiguration. Dort scrollt ihr dann nach unten und sucht euer passendes Gerät aus. 
+für diverse Plattformen gebastelt. Geht für die Installation wie folgt vor: 
+Geht nach rechts auf WRP Lounge --> klickt dann oben auf Erweiterte Kodi Konfiguration. Dort scrollt ihr dann nach unten und sucht euer passendes Gerät aus. 
 Klickt die jeweilige Datei an und installiert diese, nach der Installation der Advanced Settings Datei benötigt Kodi einen Neustart.
 
 [B][COLOR red]SCHRITT 2:[/COLOR] [COLOR cyan]Überprüfung der korrekten Einstellungen:[/COLOR][/B] 
 	
-Es kann vor kommen das bei der Installation Einstellungen nicht korrekt übernommen wurden. Hierfür überprüfen wir folgende Einstellungen. 
+Es kann vor kommen das bei der Installation Einstellungen nicht korrekt übernommen wurden. 
+Hierfür überprüfen wir folgende Einstellungen. 
 Geht ganz nach rechts auf den Reiter Power --> und navigiert zu System --> Addons --> Aktualisierungen. 
 Überprüft hier bitte ob die Einstellung "Updates automatisch installieren" aktiviert ist. 
 Wenn dies nicht aktiviert ist, dies [COLOR red]umgehend[/COLOR] aktivieren bitte.
