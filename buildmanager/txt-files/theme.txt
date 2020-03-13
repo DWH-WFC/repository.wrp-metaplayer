@@ -1,17 +1,27 @@
-name="Netflix Style PC Edition"
-url="http://wrp-world.net/wrp/builds/leia/netflix/18.6NetflixPC.zip"
-icon="http://wrp-world.net/wrp/images/leia/Netflix.jpg"
-fanart="http://wrp-world.net/wrp/images/leia/Netflix.jpg"
+name="WRPflix Android Edition"
+url="https://github.com/DWH-WFC/repository.wrp-metaplayer/raw/master/buildmanager/builds/18.6WRPflixAndroid.zip"
+icon="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
+fanart="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
 adult="no"
 description=" 
- - 18.6 Leia Image für Android Systeme, PC 
+ - 18.6 Leia Image fuer Android Systeme 
  - Aura WRP Mod Theme"
 
-name="Netflix Style XBOX Edition"
-url="http://wrp-world.net/wrp/builds/leia/netflix/18.6NetflixXBOX.zip"
-icon="http://wrp-world.net/wrp/images/leia/Netflix.jpg"
-fanart="http://wrp-world.net/wrp/images/leia/Netflix.jpg"
+
+name="WRPflix PC Edition"
+url="https://github.com/DWH-WFC/repository.wrp-metaplayer/raw/master/buildmanager/builds/18.6WRPflixPC.zip"
+icon="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
+fanart="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
 adult="no"
 description=" 
- - 18.6 Leia Image für XBOX 
+ - 18.6 Leia Image fuer PC Systeme 
+ - Aura WRP Mod Theme"
+
+name="WRPflix XBOX Edition"
+url="https://github.com/DWH-WFC/repository.wrp-metaplayer/raw/master/buildmanager/builds/18.6WRPflixXBOX.zip"
+icon="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
+fanart="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
+adult="no"
+description=" 
+ - 18.6 Leia Image für XBOX One, One S und One X
  - Aura WRP Mod Theme"
