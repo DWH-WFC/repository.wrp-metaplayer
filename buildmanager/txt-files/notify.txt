@@ -3,7 +3,10 @@
 
 [B][COLOR red]Wichtige WRP Kodi Build Manager Informationen:[/COLOR][/B]
 
-Beim einspielen eines Builds werden sämtliche Addons und Einstellungen überschrieben. 
+Beim einspielen eines Builds werden sämtliche Addons und Einstellungen überschrieben. Nach der Build Installation arbeitet Kodi alle Einstellungen 
+selbstständig ab. Dies kann je nach Plattform etwas dauern aber der Skinwechsel sollte spätestens bis rechts oben "Erzwinge Updates" des WRP Kodi 
+Build Managers erscheint vollzogen wurden sein. Ist dies nicht der Fall den Skin dann manuell in der Benutzeroberfläche aktivieren.
+
 Bei der Installation eines aktuellen Builds ab Version 1.9 müssen nach erfolgreicher Installation noch einige Einstellungen vorgenommen 
 werden. Hierfür bitte folgende Informationen beachten und unbedingt diese 5 Schritte durchführen:
 
