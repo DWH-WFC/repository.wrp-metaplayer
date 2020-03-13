@@ -15,7 +15,8 @@ werden. Hierfür bitte folgende Informationen beachten und unbedingt diese 5 Sch
 
 Diese Datei ist sehr wichtig damit euer Kodi recht flüssig funktioniert. Hierfür habe ich euch schon diverse voreingestellte Versionen 
 für diverse Plattformen gebastelt. Geht für die Installation wie folgt vor: 
-Geht nach rechts auf WRP Lounge --> klickt dann oben auf Erweiterte Kodi Konfiguration. Dort scrollt ihr dann nach unten und sucht euer passendes Gerät aus. 
+Geht nach rechts auf WRP Lounge --> klickt dann oben auf Erweiterte Kodi Konfiguration. 
+Dort scrollt ihr dann nach unten und sucht euer passendes Gerät aus. 
 Klickt die jeweilige Datei an und installiert diese, nach der Installation der Advanced Settings Datei benötigt Kodi einen Neustart.
 
 [B][COLOR red]SCHRITT 2:[/COLOR] [COLOR cyan]Überprüfung der korrekten Einstellungen:[/COLOR][/B] 
