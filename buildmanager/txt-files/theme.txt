@@ -23,5 +23,5 @@ icon="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master
 fanart="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/resources/5.png"
 adult="no"
 description=" 
- - 18.6 Leia Image für XBOX One, One S und One X
+ - 18.6 Leia Image fuer XBOX One, One S und One X
  - Aura WRP Mod Theme"
