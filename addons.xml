@@ -32,7 +32,7 @@
 	</extension>
 </addon>
 
-<addon id="plugin.program.wrp.manager" name="WRP Kodi Build Manager" version="2.0.0" provider-name="DWH">
+<addon id="plugin.program.wrp.manager" name="WRP Kodi Build Manager" version="2.0.1" provider-name="DWH">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="plugin.video.youtube" version="6.2.2"/>
@@ -63,6 +63,11 @@ MfG WRP Team
     </description>
     <platform>all</platform>
 	<news>
+
+[B]Version 2.0.1[/B]
+
+- new install fixed
+- Caches an DB fixed
 
 [B]Version 2.0.0[/B]
 
