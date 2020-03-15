@@ -24,7 +24,7 @@ description="
 
 ########################################################################
 
-name="500MB Systeme / Buffer 1 / Fire TV 1. Generation"
+name="500MB Systeme / Buffer 1 / Fire TV Stick 1. Generation"
 section="no"
 url="http://wrp-world.net/wrp/ASxml/FTV/advancedsettings.xml"
 icon="http://wrp-world.net/wrp/wizard/AFTV.png" 
@@ -36,7 +36,7 @@ description="
 
 ########################################################################
 
-name="1GB Systeme / Buffer 0 / Fire TV 2. Generation"
+name="1GB Systeme / Buffer 0 / Fire TV Stick 2. Generation"
 section="no"
 url="http://wrp-world.net/wrp/ASxml/1GB/Buffer0/advancedsettings.xml"
 icon="http://wrp-world.net/wrp/wizard/AFTV.png" 
@@ -48,7 +48,7 @@ description="
 
 ########################################################################
 
-name="1GB Systeme / Buffer 1 / Fire TV 2. Generation"
+name="1GB Systeme / Buffer 1 / Fire TV Stick 2. Generation"
 section="no"
 url="http://wrp-world.net/wrp/ASxml/1GB/Buffer1/advancedsettings.xml"
 icon="http://wrp-world.net/wrp/wizard/AFTV.png" 
@@ -60,7 +60,7 @@ description="
 
 ########################################################################
 
-name="1.5GB Systeme / Buffer 0 / Fire TV 4K Generation"
+name="1.5GB Systeme / Buffer 0 / Fire TV Stick 4K Generation"
 section="no"
 url="http://wrp-world.net/wrp/ASxml/1.5GB/Buffer0/advancedsettings.xml"
 icon="http://wrp-world.net/wrp/wizard/AFTV.png" 
@@ -72,7 +72,7 @@ description="
 
 ########################################################################
 
-name="1.5GB Systeme / Buffer 1 / Fire TV 4K Generation"
+name="1.5GB Systeme / Buffer 1 / Fire TV Stick 4K Generation"
 section="no"
 url="http://wrp-world.net/wrp/ASxml/1.5GB/Buffer1/advancedsettings.xml"
 icon="http://wrp-world.net/wrp/wizard/AFTV.png" 
@@ -81,6 +81,31 @@ description="
 - Fire TV Stick 4K Generation
 - 1.5GB Ram = 314572800
 "
+
+########################################################################
+
+name="2GB Systeme / Buffer 0 / Fire TV 4K"
+section="no"
+url="http://wrp-world.net/wrp/ASxml/2GB/Buffer0/advancedsettings.xml"
+icon="http://wrp-world.net/wrp/wizard/AFTV.png" 
+fanart="http://wrp-world.net/wrp/wizard/fanart.jpg"
+description="
+- Fire TV Stick 4K Generation
+- 2GB Ram = 419430400
+"
+
+########################################################################
+
+name="2GB Systeme / Buffer 1 / Fire TV 4K"
+section="no"
+url="http://wrp-world.net/wrp/ASxml/2GB/Buffer1/advancedsettings.xml"
+icon="http://wrp-world.net/wrp/wizard/AFTV.png" 
+fanart="http://wrp-world.net/wrp/wizard/fanart.jpg"
+description="
+- Fire TV 4K
+- 2GB Ram = 419430400
+"
+
 ########################################################################
 
 name="2GB Systeme / Buffer 1 / H96 4GB Ram Version"
