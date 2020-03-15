@@ -1,10 +1,53 @@
-name="WRP-Repository Archive"
+########################################################################
+
+name="xStream"
+plugin="plugin.video.xstream"
+url="https://github.com/streamxstream/xStreamRepo/raw/master/plugin.video.xstream/plugin.video.xstream-3.5.13.zip"
+repository="repository.xstream"
+repositoryxml="https://raw.githubusercontent.com/streamxstream/xStreamRepo/master/plugin.video.xstream/addon.xml"
+repositoryurl="https://raw.githubusercontent.com/streamxstream/xStreamRepo/master/plugin.video.xstream/"
+icon="https://github.com/streamxstream/plugin.video.xstream/raw/nightly/icon.png"
+fanart="https://raw.githubusercontent.com/streamxstream/xStreamRepo/master/plugin.video.xstream/fanart.jpg"
+adult="no"
+description="xStream Repository"
+
+########################################################################
+
+name="Robin Hood TV"
+plugin="plugin.video.RobinHoodTv"
+url="http://kodibalkan.com/repo/programi/plugin.video.RobinHoodTv/plugin.video.RobinHoodTv-1.1.6.zip"
+repository="repository.robinhood"
+repositoryxml="http://kodibalkan.com/repo/programi/addons.xml"
+repositoryurl="http://kodibalkan.com/repo/programi/"
+icon="http://kodibalkan.com/repo/programi/repository.robinhood/icon.png"
+fanart="http://kodibalkan.com/repo/programi/plugin.video.RobinHoodTv/fanart.jpg"
+adult="no"
+description="Robin Hood TV" 
+
+########################################################################
+
+name="WRP-Metaplayer Repository"
+plugin="repository.wrp-metaplayer"
+url="https://github.com/DWH-WFC/repository.wrp-metaplayer/raw/master/zips/repository.wrp-metaplayer/repository.wrp-metaplayer-1.0.5.zip"
+repository="repository.wrp-metaplayer"
+repositoryxml="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/zips/repository.wrp-metaplayer/addon.xml"
+repositoryurl="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/zips/repository.wrp-metaplayer/"
+icon="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/zips/repository.wrp-metaplayer/icon.png"
+fanart="https://raw.githubusercontent.com/DWH-WFC/repository.wrp-metaplayer/master/zips/repository.wrp-metaplayer/fanart.jpg"
+adult="no"
+description="White Rabbit Productions Repository"
+
+########################################################################
+
+name="WRP Repository Archive"
 plugin="repository.repo.archive"
-url=""
+url="https://github.com/DWH-WFC/repository.repo.archive/raw/master/zips/repository.repo.archive/repository.repo.archive-1.0.0.zip"
 repository="repository.repo.archive"
-repositoryxml="https://raw.github.com/DWH-WFC/repository.repo.archive/master/addons.xml"
-repositoryurl="https://raw.github.com/DWH-WFC/repository.repo.archive/master/zips/"
+repositoryxml="https://raw.githubusercontent.com/DWH-WFC/repository.repo.archive/master/zips/repository.repo.archive/addon.xml"
+repositoryurl="https://raw.githubusercontent.com/DWH-WFC/repository.repo.archive/master/zips/repository.repo.archive/"
 icon="https://raw.githubusercontent.com/DWH-WFC/repository.repo.archive/master/icon.png"
 fanart="https://raw.githubusercontent.com/DWH-WFC/repository.repo.archive/master/fanart.jpg"
 adult="no"
 description="White Rabbit Productions Repository"
+
+########################################################################
