@@ -1,3 +1,9 @@
+ 
+[B]Version 1.0.5~nightly2[/B]
+
+ - Logo revised
+ - Actor Section revised
+ 
 [B]Version 1.0.5~nightly1[/B]
 
  - addon.xml überarbeitet (WRP-Metaplayer)

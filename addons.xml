@@ -502,7 +502,7 @@ v0.8.0 (2017-11-08)
 	</extension>
 </addon>
 
-<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5~nightly1" provider-name="DWH">
+<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5~nightly2" provider-name="DWH">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.pil" version="1.1.7"/>
@@ -537,6 +537,12 @@ v0.8.0 (2017-11-08)
 			<screenshot>resources/art/screenshot3.jpg</screenshot>
 		</assets>
 		<news>
+
+ [B]Version 1.0.5~nightly2[/B]
+
+ - Logo revised
+ - Actor Section revised
+
 [B]Version 1.0.5~nightly1[/B]
 
  - addon.xml überarbeitet (WRP-Metaplayer)
@@ -594,7 +600,7 @@ v0.8.0 (2017-11-08)
 	</extension>
 </addon>
 
-<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.6">
+<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.7">
     <requires>
         <import addon="xbmc.gui" version="5.14.0" />
         <import addon="script.skinshortcuts" version="0.4.0" />
@@ -627,6 +633,11 @@ v0.8.0 (2017-11-08)
             <screenshot>resources/screenshot-05.jpg</screenshot>
         </assets>
         <news>
+
+[B]Version 1.0.7[/B]
+
+- Skin Settings fixed
+- Icons added
 
 [B]Version 1.0.6[/B]
 

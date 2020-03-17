@@ -1,4 +1,9 @@
 
+[B]Version 1.0.7[/B]
+
+- Skin Settings fixed
+- Icons added
+
 [B]Version 1.0.6[/B]
 
 - WRP Kodi Buid Manager fixed
