@@ -1,1 +1,1 @@
-Urlresolver*https://api.github.com/repos/streamxstream/script.module.urlresolver/zipball/master?access_token=69266f58d476ee4ec06658875441c5a8b21087f8*urlresolver.png
+Urlresolver*https://api.github.com/repos/streamxstream/script.module.urlresolver/zipball/master?access_token=b4abc7d3228c2d3ae9a412ad08970d57890aace2*urlresolver.png
