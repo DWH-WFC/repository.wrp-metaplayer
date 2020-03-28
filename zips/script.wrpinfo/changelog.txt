@@ -1,3 +1,11 @@
+
+[B]Version 1.0.5~nightly5[/B]
+
+ - Netflix Skin Clearlogo bugfix
+ - Aura Skin Clearlogo bugfix
+ - Translations
+ - Movie DB Info "Canceled" Update 
+ - Artwork Beef Function and Dependencies added
  
 [B]Version 1.0.5~nightly4[/B]
 
