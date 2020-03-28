@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5~nightly2" provider-name="DWH">
+<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5~nightly4" provider-name="DWH">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.pil" version="1.1.7"/>
@@ -16,8 +16,8 @@
 	<extension point="kodi.context.item">
 		<menu id="kodi.core.main">
 			<item library="context.py">
-				<label>WRPInfo</label>
-				<visible>String.IsEqual(ListItem.dbtype,movie) | String.IsEqual(ListItem.dbtype,tvshow) | String.IsEqual(ListItem.dbtype,season) | String.IsEqual(ListItem.dbtype,episode) | String.IsEqual(ListItem.dbtype,actor) | String.IsEqual(ListItem.dbtype,director)</visible>
+				<label>In WRPInfo öffnen</label>
+				<visible>String.IsEqual(ListItem.dbtype,movie) | String.IsEqual(ListItem.dbtype,tvshow) | String.IsEqual(ListItem.dbtype,season) | String.IsEqual(ListItem.dbtype,episode) | String.IsEqual(ListItem.dbtype,actor) | String.IsEqual(ListItem.dbtype,director) | String.IsEqual(ListItem.AddonName,plugin.video.xstream)</visible>
 			</item>
 		</menu>
 	</extension>
@@ -35,7 +35,23 @@
 		</assets>
 		<news>
  
- [B]Version 1.0.5~nightly2[/B]
+[B]Version 1.0.5~nightly4[/B]
+
+ - Movie DB Key Update
+ - Translations
+ - Netflix Skin Actor Info revised
+ - Netflix Skin Actor Info Color Highlight included
+ - Netflix Skin Label revised
+ - Netflix Skin Clearlogo revised, Artwork Beef loads images
+ - Netflix Skin revised
+ - Logo resized
+ 
+[B]Version 1.0.5~nightly3[/B]
+
+ - Trailer Fullscreen Button revised
+ - Movie DB Certification DE added
+ 
+[B]Version 1.0.5~nightly2[/B]
 
  - Logo revised
  - Actor Section revised

@@ -1,4 +1,9 @@
 
+[B]Version 1.0.8[/B]
+
+- language fixed
+- Icons added
+
 [B]Version 1.0.7[/B]
 
 - Skin Settings fixed

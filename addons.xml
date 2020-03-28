@@ -83,7 +83,7 @@ MfG WRP Team
   </extension>
 </addon>
 
-<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.9~nightly3" provider-name="DWH">
+<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.9~nightly4" provider-name="DWH">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="metadata.tvdb.com" version="3.0.14"/>
@@ -130,6 +130,12 @@ MfG WRP Team
         <license>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</license>
         <source>Source Code from Chaapai by Mr.Blamo and OpenMeta by OpenProject</source>
         <news>THX an Kasi45 für deine super Hilfe
+
+[B]Version 1.0.9~nightly4[/B]
+- Add new WRP Metaplayer Trakt API Client
+- Add New TV Shows (Trakt)
+- Allow sorting of lists by list add date
+- Trakt Collection sort by added
 
 [B]Version 1.0.9~nightly3[/B]
 - updateManager fixed THX Kasi45
@@ -268,7 +274,7 @@ MfG WRP Team
    	</extension>
 </addon>
 
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.28.1~adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.28.2~adev" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -502,7 +508,7 @@ v0.8.0 (2017-11-08)
 	</extension>
 </addon>
 
-<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5~nightly2" provider-name="DWH">
+<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5~nightly4" provider-name="DWH">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.pil" version="1.1.7"/>
@@ -519,8 +525,8 @@ v0.8.0 (2017-11-08)
 	<extension point="kodi.context.item">
 		<menu id="kodi.core.main">
 			<item library="context.py">
-				<label>WRPInfo</label>
-				<visible>String.IsEqual(ListItem.dbtype,movie) | String.IsEqual(ListItem.dbtype,tvshow) | String.IsEqual(ListItem.dbtype,season) | String.IsEqual(ListItem.dbtype,episode) | String.IsEqual(ListItem.dbtype,actor) | String.IsEqual(ListItem.dbtype,director)</visible>
+				<label>In WRPInfo öffnen</label>
+				<visible>String.IsEqual(ListItem.dbtype,movie) | String.IsEqual(ListItem.dbtype,tvshow) | String.IsEqual(ListItem.dbtype,season) | String.IsEqual(ListItem.dbtype,episode) | String.IsEqual(ListItem.dbtype,actor) | String.IsEqual(ListItem.dbtype,director) | String.IsEqual(ListItem.AddonName,plugin.video.xstream)</visible>
 			</item>
 		</menu>
 	</extension>
@@ -538,7 +544,23 @@ v0.8.0 (2017-11-08)
 		</assets>
 		<news>
 
- [B]Version 1.0.5~nightly2[/B]
+[B]Version 1.0.5~nightly4[/B]
+
+ - Movie DB Key Update
+ - Translations
+ - Netflix Skin Actor Info revised
+ - Netflix Skin Actor Info Color Highlight included
+ - Netflix Skin Label revised
+ - Netflix Skin Clearlogo revised, Artwork Beef loads images
+ - Netflix Skin revised
+ - Logo resized
+
+[B]Version 1.0.5~nightly3[/B]
+
+ - Trailer Fullscreen Button revised
+ - Movie DB Certification DE added
+
+[B]Version 1.0.5~nightly2[/B]
 
  - Logo revised
  - Actor Section revised
@@ -600,7 +622,7 @@ v0.8.0 (2017-11-08)
 	</extension>
 </addon>
 
-<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.7">
+<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.8">
     <requires>
         <import addon="xbmc.gui" version="5.14.0" />
         <import addon="script.skinshortcuts" version="0.4.0" />
@@ -633,6 +655,11 @@ v0.8.0 (2017-11-08)
             <screenshot>resources/screenshot-05.jpg</screenshot>
         </assets>
         <news>
+
+[B]Version 1.0.8[/B]
+
+- language fixed
+- Icons added
 
 [B]Version 1.0.7[/B]
 

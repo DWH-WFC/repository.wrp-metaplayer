@@ -1,4 +1,10 @@
 
+[B]Version 1.0.9~nightly4[/B]
+- Add new WRP Metaplayer Trakt API Client
+- Add New TV Shows (Trakt)
+- Allow sorting of lists by list add date
+- Trakt Collection sort by added
+
 [B]Version 1.0.9~nightly3[/B]
 - updateManager fixed THX Kasi45
 
