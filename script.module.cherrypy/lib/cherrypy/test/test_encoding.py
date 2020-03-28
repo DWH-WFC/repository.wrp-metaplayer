@@ -4,10 +4,11 @@ import gzip
 import io
 from unittest import mock
 
-import six
+from six.moves.http_client import IncompleteRead
+from six.moves.urllib.parse import quote as url_quote
 
 import cherrypy
-from cherrypy._cpcompat import IncompleteRead, ntob, ntou
+from cherrypy._cpcompat import ntob, ntou
 
 from cherrypy.test import helper
 
@@ -53,7 +54,7 @@ class EncodingTests(helper.CPWebCase):
 
             @cherrypy.expose
             def reqparams(self, *args, **kwargs):
-                return ntob(', ').join(
+                return b', '.join(
                     [': '.join((k, v)).encode('utf8')
                      for k, v in sorted(cherrypy.request.params.items())]
                 )
@@ -119,22 +120,22 @@ class EncodingTests(helper.CPWebCase):
         cherrypy.tree.mount(root, config={'/gzip': {'tools.gzip.on': True}})
 
     def test_query_string_decoding(self):
-        if six.PY3:
-            # This test fails on Python 3. See #1443
-            return
-        europoundUtf8 = europoundUnicode.encode('utf-8')
-        self.getPage(ntob('/?param=') + europoundUtf8)
-        self.assertBody(europoundUtf8)
+        URI_TMPL = '/reqparams?q={q}'
+
+        europoundUtf8_2_bytes = europoundUnicode.encode('utf-8')
+        europoundUtf8_2nd_byte = europoundUtf8_2_bytes[1:2]
 
         # Encoded utf8 query strings MUST be parsed correctly.
         # Here, q is the POUND SIGN U+00A3 encoded in utf8 and then %HEX
-        self.getPage('/reqparams?q=%C2%A3')
+        self.getPage(URI_TMPL.format(q=url_quote(europoundUtf8_2_bytes)))
         # The return value will be encoded as utf8.
-        self.assertBody(ntob('q: \xc2\xa3'))
+        self.assertBody(b'q: ' + europoundUtf8_2_bytes)
 
         # Query strings that are incorrectly encoded MUST raise 404.
-        # Here, q is the POUND SIGN U+00A3 encoded in latin1 and then %HEX
-        self.getPage('/reqparams?q=%A3')
+        # Here, q is the second byte of POUND SIGN U+A3 encoded in utf8
+        # and then %HEX
+        # TODO: check whether this shouldn't raise 400 Bad Request instead
+        self.getPage(URI_TMPL.format(q=url_quote(europoundUtf8_2nd_byte)))
         self.assertStatus(404)
         self.assertErrorPage(
             404,
@@ -144,7 +145,7 @@ class EncodingTests(helper.CPWebCase):
     def test_urlencoded_decoding(self):
         # Test the decoding of an application/x-www-form-urlencoded entity.
         europoundUtf8 = europoundUnicode.encode('utf-8')
-        body = ntob('param=') + europoundUtf8
+        body = b'param=' + europoundUtf8
         self.getPage('/',
                      method='POST',
                      headers=[
@@ -156,17 +157,17 @@ class EncodingTests(helper.CPWebCase):
 
         # Encoded utf8 entities MUST be parsed and decoded correctly.
         # Here, q is the POUND SIGN U+00A3 encoded in utf8
-        body = ntob('q=\xc2\xa3')
+        body = b'q=\xc2\xa3'
         self.getPage('/reqparams', method='POST',
                      headers=[(
                          'Content-Type', 'application/x-www-form-urlencoded'),
                          ('Content-Length', str(len(body))),
                      ],
                      body=body),
-        self.assertBody(ntob('q: \xc2\xa3'))
+        self.assertBody(b'q: \xc2\xa3')
 
         # ...and in utf16, which is not in the default attempt_charsets list:
-        body = ntob('\xff\xfeq\x00=\xff\xfe\xa3\x00')
+        body = b'\xff\xfeq\x00=\xff\xfe\xa3\x00'
         self.getPage('/reqparams',
                      method='POST',
                      headers=[
@@ -175,12 +176,12 @@ class EncodingTests(helper.CPWebCase):
                          ('Content-Length', str(len(body))),
                      ],
                      body=body),
-        self.assertBody(ntob('q: \xc2\xa3'))
+        self.assertBody(b'q: \xc2\xa3')
 
         # Entities that are incorrectly encoded MUST raise 400.
         # Here, q is the POUND SIGN U+00A3 encoded in utf16, but
         # the Content-Type incorrectly labels it utf-8.
-        body = ntob('\xff\xfeq\x00=\xff\xfe\xa3\x00')
+        body = b'\xff\xfeq\x00=\xff\xfe\xa3\x00'
         self.getPage('/reqparams',
                      method='POST',
                      headers=[
@@ -198,30 +199,30 @@ class EncodingTests(helper.CPWebCase):
     def test_decode_tool(self):
         # An extra charset should be tried first, and succeed if it matches.
         # Here, we add utf-16 as a charset and pass a utf-16 body.
-        body = ntob('\xff\xfeq\x00=\xff\xfe\xa3\x00')
+        body = b'\xff\xfeq\x00=\xff\xfe\xa3\x00'
         self.getPage('/decode/extra_charset', method='POST',
                      headers=[(
                          'Content-Type', 'application/x-www-form-urlencoded'),
                          ('Content-Length', str(len(body))),
                      ],
                      body=body),
-        self.assertBody(ntob('q: \xc2\xa3'))
+        self.assertBody(b'q: \xc2\xa3')
 
         # An extra charset should be tried first, and continue to other default
         # charsets if it doesn't match.
         # Here, we add utf-16 as a charset but still pass a utf-8 body.
-        body = ntob('q=\xc2\xa3')
+        body = b'q=\xc2\xa3'
         self.getPage('/decode/extra_charset', method='POST',
                      headers=[(
                          'Content-Type', 'application/x-www-form-urlencoded'),
                          ('Content-Length', str(len(body))),
                      ],
                      body=body),
-        self.assertBody(ntob('q: \xc2\xa3'))
+        self.assertBody(b'q: \xc2\xa3')
 
         # An extra charset should error if force is True and it doesn't match.
         # Here, we force utf-16 as a charset but still pass a utf-8 body.
-        body = ntob('q=\xc2\xa3')
+        body = b'q=\xc2\xa3'
         self.getPage('/decode/force_charset', method='POST',
                      headers=[(
                          'Content-Type', 'application/x-www-form-urlencoded'),
@@ -255,7 +256,7 @@ class EncodingTests(helper.CPWebCase):
                          ('Content-Length', str(len(body))),
                      ],
                      body=body),
-        self.assertBody(ntob('submit: Create, text: ab\xe2\x80\x9cc'))
+        self.assertBody(b'submit: Create, text: ab\xe2\x80\x9cc')
 
     @mock.patch('cherrypy._cpreqbody.Part.maxrambytes', 1)
     def test_multipart_decoding_bigger_maxrambytes(self):
@@ -285,7 +286,7 @@ class EncodingTests(helper.CPWebCase):
                          ('Content-Length', str(len(body))),
                      ],
                      body=body),
-        self.assertBody(ntob('submit: Create, text: \xe2\x80\x9c'))
+        self.assertBody(b'submit: Create, text: \xe2\x80\x9c')
 
     def test_multipart_decoding_no_successful_charset(self):
         # Test the decoding of a multipart entity when the charset (utf16) is
@@ -359,10 +360,15 @@ class EncodingTests(helper.CPWebCase):
         self.getPage('/utf8', [('Accept-Charset', 'us-ascii, ISO-8859-1')])
         self.assertStatus('406 Not Acceptable')
 
+        # Test malformed quality value, which should raise 400.
+        self.getPage('/mao_zedong', [('Accept-Charset',
+                                      'ISO-8859-1,utf-8;q=0.7,*;q=0.7)')])
+        self.assertStatus('400 Bad Request')
+
     def testGzip(self):
         zbuf = io.BytesIO()
         zfile = gzip.GzipFile(mode='wb', fileobj=zbuf, compresslevel=9)
-        zfile.write(ntob('Hello, world'))
+        zfile.write(b'Hello, world')
         zfile.close()
 
         self.getPage('/gzip/', headers=[('Accept-Encoding', 'gzip')])
@@ -380,6 +386,12 @@ class EncodingTests(helper.CPWebCase):
         self.assertHeader('Vary', 'Accept-Encoding')
         self.assertNoHeader('Content-Encoding')
         self.assertBody('Hello, world')
+
+        # Test that trailing comma doesn't cause IndexError
+        # Ref: https://github.com/cherrypy/cherrypy/issues/988
+        self.getPage('/gzip/', headers=[('Accept-Encoding', 'gzip,deflate,')])
+        self.assertStatus(200)
+        self.assertNotInBody('IndexError')
 
         self.getPage('/gzip/', headers=[('Accept-Encoding', '*;q=0')])
         self.assertStatus(406)

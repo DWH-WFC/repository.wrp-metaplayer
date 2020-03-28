@@ -18,35 +18,12 @@ by adding a named handler to Config.namespaces. The name can be any string,
 and the handler must be either a callable or a context manager.
 """
 
-try:
-    # Python 3.0+
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import ConfigParser
+from cherrypy._cpcompat import text_or_bytes
+from six.moves import configparser
+from six.moves import builtins
 
-try:
-    text_or_bytes
-except NameError:
-    text_or_bytes = str
-
-try:
-    # Python 3
-    import builtins
-except ImportError:
-    # Python 2
-    import __builtin__ as builtins
-
-import operator as _operator
+import operator
 import sys
-
-
-def as_dict(config):
-    """Return a dict from 'config' whether it is a dict, file, or filename."""
-    if isinstance(config, text_or_bytes):
-        config = Parser().dict_from_file(config)
-    elif hasattr(config, 'read'):
-        config = Parser().dict_from_file(config)
-    return config
 
 
 class NamespaceSet(dict):
@@ -85,9 +62,9 @@ class NamespaceSet(dict):
 
         # I chose __enter__ and __exit__ so someday this could be
         # rewritten using Python 2.5's 'with' statement:
-        # for ns, handler in self.iteritems():
+        # for ns, handler in six.iteritems(self):
         #     with handler as callable:
-        #         for k, v in ns_confs.get(ns, {}).iteritems():
+        #         for k, v in six.iteritems(ns_confs.get(ns, {})):
         #             callable(k, v)
         for ns, handler in self.items():
             exit = getattr(handler, '__exit__', None)
@@ -98,7 +75,7 @@ class NamespaceSet(dict):
                     try:
                         for k, v in ns_confs.get(ns, {}).items():
                             callable(k, v)
-                    except:
+                    except Exception:
                         # The exceptional case is handled here
                         no_exc = False
                         if exit is None:
@@ -149,16 +126,8 @@ class Config(dict):
         dict.update(self, self.defaults)
 
     def update(self, config):
-        """Update self from a dict, file or filename."""
-        if isinstance(config, text_or_bytes):
-            # Filename
-            config = Parser().dict_from_file(config)
-        elif hasattr(config, 'read'):
-            # Open file object
-            config = Parser().dict_from_file(config)
-        else:
-            config = config.copy()
-        self._apply(config)
+        """Update self from a dict, file, or filename."""
+        self._apply(Parser.load(config))
 
     def _apply(self, config):
         """Update self from a dict."""
@@ -177,7 +146,7 @@ class Config(dict):
         self.namespaces({k: v})
 
 
-class Parser(ConfigParser):
+class Parser(configparser.ConfigParser):
 
     """Sub-class of ConfigParser that keeps the case of options and that
     raises an exception if the file cannot be read.
@@ -226,6 +195,17 @@ class Parser(ConfigParser):
         else:
             self.read(file)
         return self.as_dict()
+
+    @classmethod
+    def load(self, input):
+        """Resolve 'input' to dict from a dict, file, or filename."""
+        is_file = (
+            # Filename
+            isinstance(input, text_or_bytes)
+            # Open file object
+            or hasattr(input, 'read')
+        )
+        return Parser().dict_from_file(input) if is_file else input.copy()
 
 
 # public domain "unrepr" implementation, found on the web and then improved.
@@ -480,13 +460,13 @@ class _Builder3:
         return op(left, right)
 
     def build_Add(self, o):
-        return _operator.add
+        return operator.add
 
     def build_Mult(self, o):
-        return _operator.mul
+        return operator.mul
 
     def build_USub(self, o):
-        return _operator.neg
+        return operator.neg
 
     def build_Attribute(self, o):
         parent = self.build(o.value)

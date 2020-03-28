@@ -7,6 +7,9 @@ To use this module, set ``HTTPServer.ssl_adapter`` to an instance of
 ``BuiltinSSLAdapter``.
 """
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 try:
     import ssl
 except ImportError:
@@ -20,9 +23,30 @@ except ImportError:
     except ImportError:
         DEFAULT_BUFFER_SIZE = -1
 
+import six
+
 from . import Adapter
 from .. import errors
 from ..makefile import MakeFile
+
+
+if six.PY3:
+    generic_socket_error = OSError
+else:
+    import socket
+    generic_socket_error = socket.error
+    del socket
+
+
+def _assert_ssl_exc_contains(exc, *msgs):
+    """Check whether SSL exception contains either of messages provided."""
+    if len(msgs) < 1:
+        raise TypeError(
+            '_assert_ssl_exc_contains() requires '
+            'at least one message to be passed.'
+        )
+    err_msg_lower = exc.args[1].lower()
+    return any(m.lower() in err_msg_lower for m in msgs)
 
 
 class BuiltinSSLAdapter(Adapter):
@@ -38,28 +62,28 @@ class BuiltinSSLAdapter(Adapter):
     """The filename of the certificate chain file."""
 
     context = None
-    """The ssl.SSLContext that will be used to wrap sockets where available
-    (on Python > 2.7.9 / 3.3)
-    """
+    """The ssl.SSLContext that will be used to wrap sockets."""
 
     ciphers = None
     """The ciphers list of SSL."""
 
-    def __init__(self, certificate, private_key, certificate_chain=None, ciphers=None):
+    def __init__(
+            self, certificate, private_key, certificate_chain=None,
+            ciphers=None):
         """Set up context in addition to base class properties if available."""
         if ssl is None:
             raise ImportError('You must install the ssl module to use HTTPS.')
 
-        super(BuiltinSSLAdapter, self).__init__(certificate, private_key, certificate_chain, ciphers)
+        super(BuiltinSSLAdapter, self).__init__(
+            certificate, private_key, certificate_chain, ciphers)
 
-        if hasattr(ssl, 'create_default_context'):
-            self.context = ssl.create_default_context(
-                purpose=ssl.Purpose.CLIENT_AUTH,
-                cafile=certificate_chain
-            )
-            self.context.load_cert_chain(certificate, private_key)
-            if self.ciphers is not None:
-                self.context.set_ciphers(ciphers)
+        self.context = ssl.create_default_context(
+            purpose=ssl.Purpose.CLIENT_AUTH,
+            cafile=certificate_chain
+        )
+        self.context.load_cert_chain(certificate, private_key)
+        if self.ciphers is not None:
+            self.context.set_ciphers(ciphers)
 
     def bind(self, sock):
         """Wrap and return the given socket."""
@@ -67,41 +91,55 @@ class BuiltinSSLAdapter(Adapter):
 
     def wrap(self, sock):
         """Wrap and return the given socket, plus WSGI environ entries."""
+        EMPTY_RESULT = None, {}
         try:
-            if self.context is not None:
-                s = self.context.wrap_socket(sock, do_handshake_on_connect=True,
-                                             server_side=True)
-            else:
-                s = ssl.wrap_socket(sock, do_handshake_on_connect=True,
-                                    server_side=True, certfile=self.certificate,
-                                    keyfile=self.private_key,
-                                    ssl_version=ssl.PROTOCOL_SSLv23,
-                                    ca_certs=self.certificate_chain)
+            s = self.context.wrap_socket(
+                sock, do_handshake_on_connect=True, server_side=True,
+            )
         except ssl.SSLError as ex:
             if ex.errno == ssl.SSL_ERROR_EOF:
                 # This is almost certainly due to the cherrypy engine
                 # 'pinging' the socket to assert it's connectable;
                 # the 'ping' isn't SSL.
-                return None, {}
+                return EMPTY_RESULT
             elif ex.errno == ssl.SSL_ERROR_SSL:
-                if 'http request' in ex.args[1]:
+                if _assert_ssl_exc_contains(ex, 'http request'):
                     # The client is speaking HTTP to an HTTPS server.
                     raise errors.NoSSLError
 
                 # Check if it's one of the known errors
-                # Errors that are caught by PyOpenSSL, but thrown by built-in ssl
-                _block_errors = ('unknown protocol', 'unknown ca', 'unknown_ca', 'unknown error',
-                                 'https proxy request', 'inappropriate fallback', 'wrong version number',
-                                 'no shared cipher', 'certificate unknown', 'ccs received early')
-                for error_text in _block_errors:
-                    if error_text in ex.args[1].lower():
-                        # Accepted error, let's pass
-                        return None, {}
-            elif 'handshake operation timed out' in ex.args[0]:
+                # Errors that are caught by PyOpenSSL, but thrown by
+                # built-in ssl
+                _block_errors = (
+                    'unknown protocol', 'unknown ca', 'unknown_ca',
+                    'unknown error',
+                    'https proxy request', 'inappropriate fallback',
+                    'wrong version number',
+                    'no shared cipher', 'certificate unknown',
+                    'ccs received early',
+                )
+                if _assert_ssl_exc_contains(ex, *_block_errors):
+                    # Accepted error, let's pass
+                    return EMPTY_RESULT
+            elif _assert_ssl_exc_contains(ex, 'handshake operation timed out'):
                 # This error is thrown by builtin SSL after a timeout
                 # when client is speaking HTTP to an HTTPS server.
                 # The connection can safely be dropped.
-                return None, {}
+                return EMPTY_RESULT
+            raise
+        except generic_socket_error as exc:
+            """It is unclear why exactly this happens.
+
+            It's reproducible only under Python 2 with openssl>1.0 and stdlib
+            ``ssl`` wrapper, and only with CherryPy.
+            So it looks like some healthcheck tries to connect to this socket
+            during startup (from the same process).
+
+
+            Ref: https://github.com/cherrypy/cherrypy/issues/1618
+            """
+            if six.PY2 and exc.args == (0, 'Error'):
+                return EMPTY_RESULT
             raise
         return s, self.get_environ(s)
 

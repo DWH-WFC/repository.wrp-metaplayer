@@ -1,5 +1,8 @@
 """A thread-based worker pool."""
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 
 import threading
 import time
@@ -11,8 +14,8 @@ from six.moves import queue
 __all__ = ('WorkerThread', 'ThreadPool')
 
 
-class TrueyZero(object):
-    """An object which equals and does math like the integer 0 but evals True."""
+class TrueyZero:
+    """Object which equals and does math like the integer 0 but evals True."""
 
     def __add__(self, other):
         return other
@@ -50,7 +53,8 @@ class WorkerThread(threading.Thread):
         """Initialize WorkerThread instance.
 
         Args:
-            server (cheroot.server.HTTPServer): web server object receiving this request
+            server (cheroot.server.HTTPServer): web server object
+                receiving this request
         """
         self.ready = False
         self.server = server
@@ -89,7 +93,10 @@ class WorkerThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        """Process incoming HTTP connections retrieving them from thread pool."""
+        """Process incoming HTTP connections.
+
+        Retrieves incoming connections from thread pool.
+        """
         self.server.stats['Worker Threads'][self.getName()] = self.stats
         try:
             self.ready = True
@@ -116,22 +123,27 @@ class WorkerThread(threading.Thread):
             self.server.interrupt = ex
 
 
-class ThreadPool(object):
+class ThreadPool:
     """A Request Queue for an HTTPServer which pools threads.
 
     ThreadPool objects must provide min, get(), put(obj), start()
     and stop(timeout) attributes.
     """
 
-    def __init__(self, server, min=10, max=-1, accepted_queue_size=-1, accepted_queue_timeout=10):
+    def __init__(
+            self, server, min=10, max=-1, accepted_queue_size=-1,
+            accepted_queue_timeout=10):
         """Initialize HTTP requests queue instance.
 
         Args:
-            server (cheroot.server.HTTPServer): web server object receiving this request
+            server (cheroot.server.HTTPServer): web server object
+                receiving this request
             min (int): minimum number of worker threads
             max (int): maximum number of worker threads
-            accepted_queue_size (int): maximum number of active requests in queue
-            accepted_queue_timeout (int): timeout for putting request into queue
+            accepted_queue_size (int): maximum number of active
+                requests in queue
+            accepted_queue_timeout (int): timeout for putting request
+                into queue
         """
         self.server = server
         self.min = min
@@ -152,16 +164,17 @@ class ThreadPool(object):
             while not worker.ready:
                 time.sleep(.1)
 
-    def _get_idle(self):
+    @property
+    def idle(self):  # noqa: D401; irrelevant for properties
         """Number of worker threads which are idle. Read-only."""
         return len([t for t in self._threads if t.conn is None])
-    idle = property(_get_idle, doc=_get_idle.__doc__)
 
     def put(self, obj):
         """Put request into queue.
 
         Args:
-            obj (cheroot.server.HTTPConnection): HTTP connection waiting to be processed
+            obj (cheroot.server.HTTPConnection): HTTP connection
+                waiting to be processed
         """
         self._queue.put(obj, block=True, timeout=self._queue_put_timeout)
         if obj is _SHUTDOWNREQUEST:
@@ -252,6 +265,7 @@ class ThreadPool(object):
                         KeyboardInterrupt):
                     pass
 
-    def _get_qsize(self):
+    @property
+    def qsize(self):
+        """Return the queue size."""
         return self._queue.qsize()
-    qsize = property(_get_qsize)

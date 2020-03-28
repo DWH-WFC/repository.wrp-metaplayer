@@ -28,7 +28,6 @@ import sys
 import time
 
 import cherrypy
-from cherrypy._cpcompat import ntob
 from cherrypy import _cperror, _cpmodpy
 from cherrypy.lib import httputil
 
@@ -78,29 +77,32 @@ class Root:
         return resp
 
 
-cherrypy.config.update({
-    'log.error.file': '',
-    'environment': 'production',
-    'server.socket_host': '127.0.0.1',
-    'server.socket_port': 54583,
-    'server.max_request_header_size': 0,
-    'server.max_request_body_size': 0,
-    'engine.timeout_monitor.frequency': 0,
-})
+def init():
 
-# Cheat mode on ;)
-del cherrypy.config['tools.log_tracebacks.on']
-del cherrypy.config['tools.log_headers.on']
-del cherrypy.config['tools.trailing_slash.on']
+    cherrypy.config.update({
+        'log.error.file': '',
+        'environment': 'production',
+        'server.socket_host': '127.0.0.1',
+        'server.socket_port': 54583,
+        'server.max_request_header_size': 0,
+        'server.max_request_body_size': 0,
+    })
 
-appconf = {
-    '/static': {
-        'tools.staticdir.on': True,
-        'tools.staticdir.dir': 'static',
-        'tools.staticdir.root': curdir,
-    },
-}
-app = cherrypy.tree.mount(Root(), SCRIPT_NAME, appconf)
+    # Cheat mode on ;)
+    del cherrypy.config['tools.log_tracebacks.on']
+    del cherrypy.config['tools.log_headers.on']
+    del cherrypy.config['tools.trailing_slash.on']
+
+    appconf = {
+        '/static': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'static',
+            'tools.staticdir.root': curdir,
+        },
+    }
+    globals().update(
+        app=cherrypy.tree.mount(Root(), SCRIPT_NAME, appconf),
+    )
 
 
 class NullRequest:
@@ -191,15 +193,15 @@ Finished 1000 requests
 
     parse_patterns = [
         ('complete_requests', 'Completed',
-         ntob(r'^Complete requests:\s*(\d+)')),
+         br'^Complete requests:\s*(\d+)'),
         ('failed_requests', 'Failed',
-         ntob(r'^Failed requests:\s*(\d+)')),
+         br'^Failed requests:\s*(\d+)'),
         ('requests_per_second', 'req/sec',
-         ntob(r'^Requests per second:\s*([0-9.]+)')),
+         br'^Requests per second:\s*([0-9.]+)'),
         ('time_per_request_concurrent', 'msec/req',
-         ntob(r'^Time per request:\s*([0-9.]+).*concurrent requests\)$')),
+         br'^Time per request:\s*([0-9.]+).*concurrent requests\)$'),
         ('transfer_rate', 'KB/sec',
-         ntob(r'^Transfer rate:\s*([0-9.]+)'))
+         br'^Transfer rate:\s*([0-9.]+)')
     ]
 
     def __init__(self, path=SCRIPT_NAME + '/hello', requests=1000,
@@ -222,7 +224,7 @@ Finished 1000 requests
         # Parse output of ab, setting attributes on self
         try:
             self.output = _cpmodpy.read_process(AB_PATH or 'ab', self.args())
-        except:
+        except Exception:
             print(_cperror.format_exc())
             raise
 
@@ -281,7 +283,7 @@ def size_report(sizes=(10, 100, 1000, 10000, 100000, 100000000),
 def print_report(rows):
     for row in rows:
         print('')
-        for i, val in enumerate(row):
+        for val in row:
             sys.stdout.write(str(val).rjust(10) + ' | ')
     print('')
 
@@ -355,6 +357,8 @@ def run_modpython(use_wsgi=False):
 
 
 if __name__ == '__main__':
+    init()
+
     longopts = ['cpmodpy', 'modpython', 'null', 'notests',
                 'help', 'ab=', 'apache=']
     try:
@@ -390,7 +394,7 @@ if __name__ == '__main__':
             try:
                 try:
                     run_standard_benchmarks()
-                except:
+                except Exception:
                     print(_cperror.format_exc())
                     raise
             finally:

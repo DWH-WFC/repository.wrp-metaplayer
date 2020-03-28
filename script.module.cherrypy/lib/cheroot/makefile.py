@@ -1,5 +1,8 @@
 """Socket file object."""
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 import socket
 
 try:
@@ -88,10 +91,14 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
                 self.bytes_read += len(data)
                 return data
             except socket.error as e:
-                if e.args[0] not in errors.socket_errors_nonblocking and e.args[0] not in errors.socket_error_eintr:
+                what = (
+                    e.args[0] not in errors.socket_errors_nonblocking
+                    and e.args[0] not in errors.socket_error_eintr
+                )
+                if what:
                     raise
 
-    class FauxSocket(object):
+    class FauxSocket:
         """Faux socket with the minimal interface required by pypy."""
 
         def _reuse(self):

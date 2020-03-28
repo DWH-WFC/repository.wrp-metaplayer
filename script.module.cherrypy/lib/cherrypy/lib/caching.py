@@ -37,9 +37,11 @@ import sys
 import threading
 import time
 
+import six
+
 import cherrypy
 from cherrypy.lib import cptools, httputil
-from cherrypy._cpcompat import copyitems, ntob, sorted, Event
+from cherrypy._cpcompat import Event
 
 
 class Cache(object):
@@ -197,7 +199,8 @@ class MemoryCache(Cache):
             now = time.time()
             # Must make a copy of expirations so it doesn't change size
             # during iteration
-            for expiration_time, objects in copyitems(self.expirations):
+            items = list(six.iteritems(self.expirations))
+            for expiration_time, objects in items:
                 if expiration_time <= now:
                     for obj_size, uri, sel_header_values in objects:
                         try:
@@ -402,10 +405,19 @@ def tee_output():
             output.append(chunk)
             yield chunk
 
-        # save the cache data
-        body = ntob('').join(output)
-        cherrypy._cache.put((response.status, response.headers or {},
-                             body, response.time), len(body))
+        # Save the cache data, but only if the body isn't empty.
+        # e.g. a 304 Not Modified on a static file response will
+        # have an empty body.
+        # If the body is empty, delete the cache because it
+        # contains a stale Threading._Event object that will
+        # stall all consecutive requests until the _Event times
+        # out
+        body = b''.join(output)
+        if not body:
+            cherrypy._cache.delete()
+        else:
+            cherrypy._cache.put((response.status, response.headers or {},
+                                 body, response.time), len(body))
 
     response = cherrypy.serving.response
     response.body = tee(response.body)

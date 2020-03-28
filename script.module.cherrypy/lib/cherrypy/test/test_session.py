@@ -2,13 +2,17 @@ import os
 import threading
 import time
 import socket
+import importlib
+
+from six.moves.http_client import HTTPConnection
 
 import pytest
+from path import Path
 
 import cherrypy
 from cherrypy._cpcompat import (
-    copykeys, json_decode,
-    HTTPConnection, HTTPSConnection
+    json_decode,
+    HTTPSConnection,
 )
 from cherrypy.lib import sessions
 from cherrypy.lib import reprconf
@@ -24,7 +28,8 @@ def http_methods_allowed(methods=['GET', 'HEAD']):
         cherrypy.response.headers['Allow'] = ', '.join(methods)
         raise cherrypy.HTTPError(405)
 
-cherrypy.tools.allow = cherrypy.Tool('on_start_resource', http_methods_allowed)  # noqa: E305
+
+cherrypy.tools.allow = cherrypy.Tool('on_start_resource', http_methods_allowed)
 
 
 def setup_server():
@@ -141,7 +146,8 @@ class SessionTest(helper.CPWebCase):
         # Clean up sessions.
         for fname in os.listdir(localDir):
             if fname.startswith(sessions.FileSession.SESSION_PREFIX):
-                os.unlink(os.path.join(localDir, fname))
+                path = Path(localDir) / fname
+                path.remove_p()
 
     @pytest.mark.xfail(reason='#1534')
     def test_0_Session(self):
@@ -207,14 +213,17 @@ class SessionTest(helper.CPWebCase):
         self.assertBody('done')
         self.getPage('/delete', cookieset1)
         self.assertBody('done')
-        f = lambda: [
-            x for x in os.listdir(localDir) if x.startswith('session-')]
+
+        def f():
+            return [
+                x
+                for x in os.listdir(localDir)
+                if x.startswith('session-')
+            ]
         self.assertEqual(f(), [])
 
         # Wait for the cleanup thread to delete remaining session files
         self.getPage('/')
-        f = lambda: [
-            x for x in os.listdir(localDir) if x.startswith('session-')]
         self.assertNotEqual(f(), [])
         time.sleep(2)
         self.assertEqual(f(), [])
@@ -284,7 +293,6 @@ class SessionTest(helper.CPWebCase):
         self.getPage('/iredir', self.cookies)
         self.assertBody('FileSession')
 
-    @pytest.mark.xfail(reason='#1540')
     def test_4_File_deletion(self):
         # Start a new session
         self.getPage('/testStr')
@@ -294,7 +302,6 @@ class SessionTest(helper.CPWebCase):
         os.unlink(path)
         self.getPage('/testStr', self.cookies)
 
-    @pytest.mark.xfail(reason='#1557')
     def test_5_Error_paths(self):
         self.getPage('/unknown/page')
         self.assertErrorPage(404, "The path '/unknown/page' was not found.")
@@ -338,7 +345,7 @@ class SessionTest(helper.CPWebCase):
         # Assert there is no 'expires' param
         self.assertEqual(set(cookie_parts.keys()), set(['temp', 'Path']))
         id1 = cookie_parts['temp']
-        self.assertEqual(copykeys(sessions.RamSession.cache), [id1])
+        self.assertEqual(list(sessions.RamSession.cache), [id1])
 
         # Send another request in the same "browser session".
         self.getPage('/session_cookie', self.cookies)
@@ -347,7 +354,7 @@ class SessionTest(helper.CPWebCase):
         # Assert there is no 'expires' param
         self.assertEqual(set(cookie_parts.keys()), set(['temp', 'Path']))
         self.assertBody(id1)
-        self.assertEqual(copykeys(sessions.RamSession.cache), [id1])
+        self.assertEqual(list(sessions.RamSession.cache), [id1])
 
         # Simulate a browser close by just not sending the cookies
         self.getPage('/session_cookie')
@@ -364,7 +371,7 @@ class SessionTest(helper.CPWebCase):
 
         # Wait for the session.timeout on both sessions
         time.sleep(2.5)
-        cache = copykeys(sessions.RamSession.cache)
+        cache = list(sessions.RamSession.cache)
         if cache:
             if cache == [id2]:
                 self.fail('The second session did not time out.')
@@ -386,12 +393,13 @@ class SessionTest(helper.CPWebCase):
         assert len(sessions.RamSession.locks) == 1, 'Lock not acquired'
         s2 = sessions.RamSession()
         s2.clean_up()
-        assert len(sessions.RamSession.locks) == 1, 'Clean up should not remove active lock'
+        msg = 'Clean up should not remove active lock'
+        assert len(sessions.RamSession.locks) == 1, msg
         t.join()
 
 
 try:
-    import memcache  # NOQA
+    importlib.import_module('memcache')
 
     host, port = '127.0.0.1', 11211
     for res in socket.getaddrinfo(host, port, socket.AF_UNSPEC,

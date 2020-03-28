@@ -135,7 +135,7 @@ import six
 import cheroot.server
 
 import cherrypy
-from cherrypy._cpcompat import text_or_bytes, ntob, ntou
+from cherrypy._cpcompat import ntou, unquote
 from cherrypy.lib import httputil
 
 
@@ -147,14 +147,14 @@ def process_urlencoded(entity):
     for charset in entity.attempt_charsets:
         try:
             params = {}
-            for aparam in qs.split(ntob('&')):
-                for pair in aparam.split(ntob(';')):
+            for aparam in qs.split(b'&'):
+                for pair in aparam.split(b';'):
                     if not pair:
                         continue
 
-                    atoms = pair.split(ntob('='), 1)
+                    atoms = pair.split(b'=', 1)
                     if len(atoms) == 1:
-                        atoms.append(ntob(''))
+                        atoms.append(b'')
 
                     key = unquote_plus(atoms[0]).decode(charset)
                     value = unquote_plus(atoms[1]).decode(charset)
@@ -318,7 +318,8 @@ class Entity(object):
     :attr:`request.body.parts<cherrypy._cpreqbody.Entity.parts>`. You can
     enable it with::
 
-        cherrypy.request.body.processors['multipart'] = _cpreqbody.process_multipart
+        cherrypy.request.body.processors['multipart'] = \
+            _cpreqbody.process_multipart
 
     in an ``on_start_resource`` tool.
     """
@@ -328,14 +329,15 @@ class Entity(object):
     # absence of a charset parameter, is US-ASCII."
     # However, many browsers send data in utf-8 with no charset.
     attempt_charsets = ['utf-8']
-    """A list of strings, each of which should be a known encoding.
+    r"""A list of strings, each of which should be a known encoding.
 
     When the Content-Type of the request body warrants it, each of the given
     encodings will be tried in order. The first one to successfully decode the
     entity without raising an error is stored as
     :attr:`entity.charset<cherrypy._cpreqbody.Entity.charset>`. This defaults
     to ``['utf-8']`` (plus 'ISO-8859-1' for "text/\*" types, as required by
-    `HTTP/1.1 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1>`_),
+    `HTTP/1.1
+    <http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1>`_),
     but ``['us-ascii', 'utf-8']`` for multipart parts.
     """
 
@@ -468,13 +470,10 @@ class Entity(object):
                     self.filename.endswith('"')
                 ):
                     self.filename = self.filename[1:-1]
-
-    # The 'type' attribute is deprecated in 3.2; remove it in 3.3.
-    type = property(
-        lambda self: self.content_type,
-        doc='A deprecated alias for '
-            ':attr:`content_type<cherrypy._cpreqbody.Entity.content_type>`.'
-    )
+            if 'filename*' in disp.params:
+                # @see https://tools.ietf.org/html/rfc5987
+                encoding, lang, filename = disp.params['filename*'].split("'")
+                self.filename = unquote(str(filename), encoding)
 
     def read(self, size=None, fp_out=None):
         return self.fp.read(size, fp_out)
@@ -577,14 +576,15 @@ class Part(Entity):
     # "The default character set, which must be assumed in the absence of a
     # charset parameter, is US-ASCII."
     attempt_charsets = ['us-ascii', 'utf-8']
-    """A list of strings, each of which should be a known encoding.
+    r"""A list of strings, each of which should be a known encoding.
 
     When the Content-Type of the request body warrants it, each of the given
     encodings will be tried in order. The first one to successfully decode the
     entity without raising an error is stored as
     :attr:`entity.charset<cherrypy._cpreqbody.Entity.charset>`. This defaults
     to ``['utf-8']`` (plus 'ISO-8859-1' for "text/\*" types, as required by
-    `HTTP/1.1 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1>`_),
+    `HTTP/1.1
+    <http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1>`_),
     but ``['us-ascii', 'utf-8']`` for multipart parts.
     """
 
@@ -630,17 +630,17 @@ class Part(Entity):
                 # No more data--illegal end of headers
                 raise EOFError('Illegal end of headers.')
 
-            if line == ntob('\r\n'):
+            if line == b'\r\n':
                 # Normal end of headers
                 break
-            if not line.endswith(ntob('\r\n')):
+            if not line.endswith(b'\r\n'):
                 raise ValueError('MIME requires CRLF terminators: %r' % line)
 
-            if line[0] in ntob(' \t'):
+            if line[0] in b' \t':
                 # It's a continuation line.
                 v = line.strip().decode('ISO-8859-1')
             else:
-                k, v = line.split(ntob(':'), 1)
+                k, v = line.split(b':', 1)
                 k = k.strip().decode('ISO-8859-1')
                 v = v.strip().decode('ISO-8859-1')
 
@@ -661,8 +661,8 @@ class Part(Entity):
         object that supports the 'write' method; all bytes read will be
         written to the fp, and that fp is returned.
         """
-        endmarker = self.boundary + ntob('--')
-        delim = ntob('')
+        endmarker = self.boundary + b'--'
+        delim = b''
         prev_lf = True
         lines = []
         seen = 0
@@ -670,7 +670,7 @@ class Part(Entity):
             line = self.fp.readline(1 << 16)
             if not line:
                 raise EOFError('Illegal end of multipart body.')
-            if line.startswith(ntob('--')) and prev_lf:
+            if line.startswith(b'--') and prev_lf:
                 strippedline = line.strip()
                 if strippedline == self.boundary:
                     break
@@ -680,16 +680,16 @@ class Part(Entity):
 
             line = delim + line
 
-            if line.endswith(ntob('\r\n')):
-                delim = ntob('\r\n')
+            if line.endswith(b'\r\n'):
+                delim = b'\r\n'
                 line = line[:-2]
                 prev_lf = True
-            elif line.endswith(ntob('\n')):
-                delim = ntob('\n')
+            elif line.endswith(b'\n'):
+                delim = b'\n'
                 line = line[:-1]
                 prev_lf = True
             else:
-                delim = ntob('')
+                delim = b''
                 prev_lf = False
 
             if fp_out is None:
@@ -703,7 +703,7 @@ class Part(Entity):
                 fp_out.write(line)
 
         if fp_out is None:
-            result = ntob('').join(lines)
+            result = b''.join(lines)
             return result
         else:
             fp_out.seek(0)
@@ -718,7 +718,7 @@ class Part(Entity):
             self.file = self.read_into_file()
         else:
             result = self.read_lines_to_boundary()
-            if isinstance(result, text_or_bytes):
+            if isinstance(result, bytes):
                 self.value = result
             else:
                 self.file = result
@@ -733,7 +733,8 @@ class Part(Entity):
         self.read_lines_to_boundary(fp_out=fp_out)
         return fp_out
 
-Entity.part_class = Part  # noqa: E305
+
+Entity.part_class = Part
 
 inf = float('inf')
 
@@ -746,7 +747,7 @@ class SizedReader:
         self.fp = fp
         self.length = length
         self.maxbytes = maxbytes
-        self.buffer = ntob('')
+        self.buffer = b''
         self.bufsize = bufsize
         self.bytes_read = 0
         self.done = False
@@ -782,7 +783,7 @@ class SizedReader:
         if remaining == 0:
             self.finish()
             if fp_out is None:
-                return ntob('')
+                return b''
             else:
                 return None
 
@@ -792,7 +793,7 @@ class SizedReader:
         if self.buffer:
             if remaining is inf:
                 data = self.buffer
-                self.buffer = ntob('')
+                self.buffer = b''
             else:
                 data = self.buffer[:remaining]
                 self.buffer = self.buffer[remaining:]
@@ -841,7 +842,7 @@ class SizedReader:
                 fp_out.write(data)
 
         if fp_out is None:
-            return ntob('').join(chunks)
+            return b''.join(chunks)
 
     def readline(self, size=None):
         """Read a line from the request body and return it."""
@@ -853,7 +854,7 @@ class SizedReader:
             data = self.read(chunksize)
             if not data:
                 break
-            pos = data.find(ntob('\n')) + 1
+            pos = data.find(b'\n') + 1
             if pos:
                 chunks.append(data[:pos])
                 remainder = data[pos:]
@@ -862,7 +863,7 @@ class SizedReader:
                 break
             else:
                 chunks.append(data)
-        return ntob('').join(chunks)
+        return b''.join(chunks)
 
     def readlines(self, sizehint=None):
         """Read lines from the request body and return them."""
@@ -891,12 +892,12 @@ class SizedReader:
 
             try:
                 for line in self.fp.read_trailer_lines():
-                    if line[0] in ntob(' \t'):
+                    if line[0] in b' \t':
                         # It's a continuation line.
                         v = line.strip()
                     else:
                         try:
-                            k, v = line.split(ntob(':'), 1)
+                            k, v = line.split(b':', 1)
                         except ValueError:
                             raise ValueError('Illegal header line.')
                         k = k.strip().title()
@@ -905,7 +906,7 @@ class SizedReader:
                     if k in cheroot.server.comma_separated_headers:
                         existing = self.trailers.get(k)
                         if existing:
-                            v = ntob(', ').join((existing, v))
+                            v = b', '.join((existing, v))
                     self.trailers[k] = v
             except Exception:
                 e = sys.exc_info()[1]

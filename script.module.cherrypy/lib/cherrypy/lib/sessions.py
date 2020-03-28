@@ -57,6 +57,17 @@ However, CherryPy "recognizes" a session id by looking up the saved session
 data for that id. Therefore, if you never save any session data,
 **you will get a new session id for every request**.
 
+A side effect of CherryPy overwriting unrecognised session ids is that if you
+have multiple, separate CherryPy applications running on a single domain (e.g.
+on different ports), each app will overwrite the other's session id because by
+default they use the same cookie name (``"session_id"``) but do not recognise
+each others sessions. It is therefore a good idea to use a different name for
+each, for example::
+
+    [/]
+    ...
+    tools.sessions.name = "my_app_session_id"
+
 ================
 Sharing Sessions
 ================
@@ -94,13 +105,23 @@ import datetime
 import os
 import time
 import threading
+import binascii
+
+import six
+from six.moves import cPickle as pickle
+import contextlib2
+
+import zc.lockfile
 
 import cherrypy
-from cherrypy._cpcompat import copyitems, pickle, random20
 from cherrypy.lib import httputil
-from cherrypy.lib import lockfile
 from cherrypy.lib import locking
 from cherrypy.lib import is_iterator
+
+
+if six.PY2:
+    FileNotFoundError = OSError
+
 
 missing = object()
 
@@ -114,14 +135,16 @@ class Session(object):
     id_observers = None
     "A list of callbacks to which to pass new id's."
 
-    def _get_id(self):
+    @property
+    def id(self):
+        """Return the current session id."""
         return self._id
 
-    def _set_id(self, value):
+    @id.setter
+    def id(self, value):
         self._id = value
         for o in self.id_observers:
             o(value)
-    id = property(_get_id, _set_id, doc='The current session ID.')
 
     timeout = 60
     'Number of minutes after which to delete session data.'
@@ -235,7 +258,7 @@ class Session(object):
 
     def generate_id(self):
         """Return a new session id."""
-        return random20()
+        return binascii.hexlify(os.urandom(20)).decode('ascii')
 
     def save(self):
         """Save session data."""
@@ -334,13 +357,6 @@ class Session(object):
             self.load()
         return key in self._data
 
-    if hasattr({}, 'has_key'):
-        def has_key(self, key):
-            """D.has_key(k) -> True if D has a key k, else False."""
-            if not self.loaded:
-                self.load()
-            return key in self._data
-
     def get(self, key, default=None):
         """D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None."""
         if not self.loaded:
@@ -394,7 +410,7 @@ class RamSession(Session):
         """Clean up expired sessions."""
 
         now = self.now()
-        for _id, (data, expiration_time) in copyitems(self.cache):
+        for _id, (data, expiration_time) in list(six.iteritems(self.cache)):
             if expiration_time <= now:
                 try:
                     del self.cache[_id]
@@ -409,7 +425,11 @@ class RamSession(Session):
 
         # added to remove obsolete lock objects
         for _id in list(self.locks):
-            if _id not in self.cache and self.locks[_id].acquire(blocking=False):
+            locked = (
+                _id not in self.cache
+                and self.locks[_id].acquire(blocking=False)
+            )
+            if locked:
                 lock = self.locks.pop(_id)
                 lock.release()
 
@@ -470,7 +490,9 @@ class FileSession(Session):
         if isinstance(self.lock_timeout, (int, float)):
             self.lock_timeout = datetime.timedelta(seconds=self.lock_timeout)
         if not isinstance(self.lock_timeout, (datetime.timedelta, type(None))):
-            raise ValueError('Lock timeout must be numeric seconds or a timedelta instance.')
+            raise ValueError(
+                'Lock timeout must be numeric seconds or a timedelta instance.'
+            )
 
     @classmethod
     def setup(cls, **kwargs):
@@ -538,8 +560,8 @@ class FileSession(Session):
         checker = locking.LockChecker(self.id, self.lock_timeout)
         while not checker.expired():
             try:
-                self.lock = lockfile.LockFile(path)
-            except lockfile.LockError:
+                self.lock = zc.lockfile.LockFile(path)
+            except zc.lockfile.LockError:
                 time.sleep(0.1)
             else:
                 break
@@ -549,8 +571,9 @@ class FileSession(Session):
 
     def release_lock(self, path=None):
         """Release the lock on the currently-loaded session data."""
-        self.lock.release()
-        self.lock.remove()
+        self.lock.close()
+        with contextlib2.suppress(FileNotFoundError):
+            os.remove(self.lock._path)
         self.locked = False
 
     def clean_up(self):
@@ -558,7 +581,11 @@ class FileSession(Session):
         now = self.now()
         # Iterate over all session files in self.storage_path
         for fname in os.listdir(self.storage_path):
-            if fname.startswith(self.SESSION_PREFIX) and not fname.endswith(self.LOCK_SUFFIX):
+            have_session = (
+                fname.startswith(self.SESSION_PREFIX)
+                and not fname.endswith(self.LOCK_SUFFIX)
+            )
+            if have_session:
                 # We have a session file: lock and load it and check
                 #   if it's expired. If it fails, nevermind.
                 path = os.path.join(self.storage_path, fname)
@@ -594,7 +621,7 @@ class MemcachedSession(Session):
     # Wrap all .get and .set operations in a single lock.
     mc_lock = threading.RLock()
 
-    # This is a seperate set of locks per session id.
+    # This is a separate set of locks per session id.
     locks = {}
 
     servers = ['127.0.0.1:11211']
@@ -682,7 +709,9 @@ def save():
         if is_iterator(response.body):
             response.collapse_body()
         cherrypy.session.save()
-save.failsafe = True  # noqa: E305
+
+
+save.failsafe = True
 
 
 def close():
@@ -693,7 +722,9 @@ def close():
         sess.release_lock()
         if sess.debug:
             cherrypy.log('Lock released on close.', 'TOOLS.SESSIONS')
-close.failsafe = True  # noqa: E305
+
+
+close.failsafe = True
 close.priority = 90
 
 
@@ -885,3 +916,4 @@ def expire():
     one_year = 60 * 60 * 24 * 365
     e = time.time() - one_year
     cherrypy.serving.response.cookie[name]['expires'] = httputil.HTTPDate(e)
+    cherrypy.serving.response.cookie[name].pop('max-age', None)

@@ -12,17 +12,15 @@ import email.utils
 import re
 from binascii import b2a_base64
 from cgi import parse_header
-try:
-    # Python 3
-    from email.header import decode_header
-except ImportError:
-    from email.Header import decode_header
+from email.header import decode_header
 
 import six
+from six.moves import range, builtins, map
+from six.moves.BaseHTTPServer import BaseHTTPRequestHandler
 
-from cherrypy._cpcompat import BaseHTTPRequestHandler, ntob, ntou
-from cherrypy._cpcompat import text_or_bytes, iteritems
-from cherrypy._cpcompat import reversed, sorted, unquote_qs
+import cherrypy
+from cherrypy._cpcompat import ntob, ntou
+from cherrypy._cpcompat import unquote_plus
 
 response_codes = BaseHTTPRequestHandler.responses.copy()
 
@@ -40,7 +38,7 @@ HTTPDate = functools.partial(email.utils.formatdate, usegmt=True)
 
 
 def urljoin(*atoms):
-    """Return the given path \*atoms, joined into a single URL.
+    r"""Return the given path \*atoms, joined into a single URL.
 
     This will correctly join a SCRIPT_NAME and PATH_INFO into the
     original URL, even if either atom is blank.
@@ -58,11 +56,11 @@ def urljoin_bytes(*atoms):
     This will correctly join a SCRIPT_NAME and PATH_INFO into the
     original URL, even if either atom is blank.
     """
-    url = ntob('/').join([x for x in atoms if x])
-    while ntob('//') in url:
-        url = url.replace(ntob('//'), ntob('/'))
+    url = b'/'.join([x for x in atoms if x])
+    while b'//' in url:
+        url = url.replace(b'//', b'/')
     # Special-case the final url of "", and return "/" instead.
-    return url or ntob('/')
+    return url or b'/'
 
 
 def protocol_from_http(protocol_str):
@@ -139,13 +137,13 @@ class HeaderElement(object):
         self.params = params
 
     def __cmp__(self, other):
-        return cmp(self.value, other.value)  # noqa: F821
+        return builtins.cmp(self.value, other.value)
 
     def __lt__(self, other):
         return self.value < other.value
 
     def __str__(self):
-        p = [';%s=%s' % (k, v) for k, v in iteritems(self.params)]
+        p = [';%s=%s' % (k, v) for k, v in six.iteritems(self.params)]
         return str('%s%s' % (self.value, ''.join(p)))
 
     def __bytes__(self):
@@ -204,12 +202,26 @@ class AcceptElement(HeaderElement):
         val = self.params.get('q', '1')
         if isinstance(val, HeaderElement):
             val = val.value
-        return float(val)
+        try:
+            return float(val)
+        except ValueError as val_err:
+            """Fail client requests with invalid quality value.
+
+            Ref: https://github.com/cherrypy/cherrypy/issues/1370
+            """
+            six.raise_from(
+                cherrypy.HTTPError(
+                    400,
+                    'Malformed HTTP header: `{}`'.
+                    format(str(self)),
+                ),
+                val_err,
+            )
 
     def __cmp__(self, other):
-        diff = cmp(self.qvalue, other.qvalue)  # noqa: F821
+        diff = builtins.cmp(self.qvalue, other.qvalue)
         if diff == 0:
-            diff = cmp(str(self), str(other))  # noqa: F821
+            diff = builtins.cmp(str(self), str(other))
         return diff
 
     def __lt__(self, other):
@@ -218,8 +230,11 @@ class AcceptElement(HeaderElement):
         else:
             return self.qvalue < other.qvalue
 
-RE_HEADER_SPLIT = re.compile(',(?=(?:[^"]*"[^"]*")*[^"]*$)')  # noqa: E305
-def header_elements(fieldname, fieldvalue):  # noqa: E302
+
+RE_HEADER_SPLIT = re.compile(',(?=(?:[^"]*"[^"]*")*[^"]*$)')
+
+
+def header_elements(fieldname, fieldvalue):
     """Return a sorted HeaderElement list from a comma-separated header string.
     """
     if not fieldvalue:
@@ -237,7 +252,12 @@ def header_elements(fieldname, fieldvalue):  # noqa: E302
 
 
 def decode_TEXT(value):
-    r"""Decode :rfc:`2047` TEXT (e.g. "=?utf-8?q?f=C3=BCr?=" -> "f\xfcr")."""
+    r"""
+    Decode :rfc:`2047` TEXT
+
+    >>> decode_TEXT("=?utf-8?q?f=C3=BCr?=") == b'f\xfcr'.decode('latin-1')
+    True
+    """
     atoms = decode_header(value)
     decodedvalue = ''
     for atom, charset in atoms:
@@ -247,31 +267,41 @@ def decode_TEXT(value):
     return decodedvalue
 
 
+def decode_TEXT_maybe(value):
+    """
+    Decode the text but only if '=?' appears in it.
+    """
+    return decode_TEXT(value) if '=?' in value else value
+
+
 def valid_status(status):
     """Return legal HTTP status Code, Reason-phrase and Message.
 
-    The status arg must be an int, or a str that begins with an int.
+    The status arg must be an int, a str that begins with an int
+    or the constant from ``http.client`` stdlib module.
 
-    If status is an int, or a str and no reason-phrase is supplied,
-    a default reason-phrase will be provided.
+    If status has no reason-phrase is supplied, a default reason-
+    phrase will be provided.
+
+    >>> from six.moves import http_client
+    >>> from six.moves.BaseHTTPServer import BaseHTTPRequestHandler
+    >>> valid_status(http_client.ACCEPTED) == (
+    ...     int(http_client.ACCEPTED),
+    ... ) + BaseHTTPRequestHandler.responses[http_client.ACCEPTED]
+    True
     """
 
     if not status:
         status = 200
 
-    status = str(status)
-    parts = status.split(' ', 1)
-    if len(parts) == 1:
-        # No reason supplied.
-        code, = parts
-        reason = None
-    else:
-        code, reason = parts
-        reason = reason.strip()
+    code, reason = status, None
+    if isinstance(status, six.string_types):
+        code, _, reason = status.partition(' ')
+        reason = reason.strip() or None
 
     try:
         code = int(code)
-    except ValueError:
+    except (TypeError, ValueError):
         raise ValueError('Illegal response status from server '
                          '(%s is non-numeric).' % repr(code))
 
@@ -329,8 +359,8 @@ def _parse_qs(qs, keep_blank_values=0, strict_parsing=0, encoding='utf-8'):
             else:
                 continue
         if len(nv[1]) or keep_blank_values:
-            name = unquote_qs(nv[0], encoding)
-            value = unquote_qs(nv[1], encoding)
+            name = unquote_plus(nv[0], encoding, errors='strict')
+            value = unquote_plus(nv[1], encoding, errors='strict')
             if name in d:
                 if not isinstance(d[name], list):
                     d[name] = [d[name]]
@@ -360,53 +390,77 @@ def parse_query_string(query_string, keep_blank_values=True, encoding='utf-8'):
     return pm
 
 
-class CaseInsensitiveDict(dict):
+####
+# Inlined from jaraco.collections 1.5.2
+# Ref #1673
+class KeyTransformingDict(dict):
+    """
+    A dict subclass that transforms the keys before they're used.
+    Subclasses may override the default transform_key to customize behavior.
+    """
+    @staticmethod
+    def transform_key(key):
+        return key
+
+    def __init__(self, *args, **kargs):
+        super(KeyTransformingDict, self).__init__()
+        # build a dictionary using the default constructs
+        d = dict(*args, **kargs)
+        # build this dictionary using transformed keys.
+        for item in d.items():
+            self.__setitem__(*item)
+
+    def __setitem__(self, key, val):
+        key = self.transform_key(key)
+        super(KeyTransformingDict, self).__setitem__(key, val)
+
+    def __getitem__(self, key):
+        key = self.transform_key(key)
+        return super(KeyTransformingDict, self).__getitem__(key)
+
+    def __contains__(self, key):
+        key = self.transform_key(key)
+        return super(KeyTransformingDict, self).__contains__(key)
+
+    def __delitem__(self, key):
+        key = self.transform_key(key)
+        return super(KeyTransformingDict, self).__delitem__(key)
+
+    def get(self, key, *args, **kwargs):
+        key = self.transform_key(key)
+        return super(KeyTransformingDict, self).get(key, *args, **kwargs)
+
+    def setdefault(self, key, *args, **kwargs):
+        key = self.transform_key(key)
+        return super(KeyTransformingDict, self).setdefault(
+            key, *args, **kwargs)
+
+    def pop(self, key, *args, **kwargs):
+        key = self.transform_key(key)
+        return super(KeyTransformingDict, self).pop(key, *args, **kwargs)
+
+    def matching_key_for(self, key):
+        """
+        Given a key, return the actual key stored in self that matches.
+        Raise KeyError if the key isn't found.
+        """
+        try:
+            return next(e_key for e_key in self.keys() if e_key == key)
+        except StopIteration:
+            raise KeyError(key)
+####
+
+
+class CaseInsensitiveDict(KeyTransformingDict):
 
     """A case-insensitive dict subclass.
 
     Each key is changed on entry to str(key).title().
     """
 
-    def __getitem__(self, key):
-        return dict.__getitem__(self, str(key).title())
-
-    def __setitem__(self, key, value):
-        dict.__setitem__(self, str(key).title(), value)
-
-    def __delitem__(self, key):
-        dict.__delitem__(self, str(key).title())
-
-    def __contains__(self, key):
-        return dict.__contains__(self, str(key).title())
-
-    def get(self, key, default=None):
-        return dict.get(self, str(key).title(), default)
-
-    if hasattr({}, 'has_key'):
-        def has_key(self, key):
-            return str(key).title() in self
-
-    def update(self, E):
-        for k in E.keys():
-            self[str(k).title()] = E[k]
-
-    @classmethod
-    def fromkeys(cls, seq, value=None):
-        newdict = cls()
-        for k in seq:
-            newdict[str(k).title()] = value
-        return newdict
-
-    def setdefault(self, key, x=None):
-        key = str(key).title()
-        try:
-            return self[key]
-        except KeyError:
-            self[key] = x
-            return x
-
-    def pop(self, key, default):
-        return dict.pop(self, str(key).title(), default)
+    @staticmethod
+    def transform_key(key):
+        return str(key).title()
 
 
 #   TEXT = <any OCTET except CTLs, but including LWS>
@@ -415,9 +469,9 @@ class CaseInsensitiveDict(dict):
 # field continuation. It is expected that the folding LWS will be
 # replaced with a single SP before interpretation of the TEXT value."
 if str == bytes:
-    header_translate_table = ''.join([chr(i) for i in six.moves.xrange(256)])
+    header_translate_table = ''.join([chr(i) for i in range(256)])
     header_translate_deletechars = ''.join(
-        [chr(i) for i in six.moves.xrange(32)]) + chr(127)
+        [chr(i) for i in range(32)]) + chr(127)
 else:
     header_translate_table = None
     header_translate_deletechars = bytes(range(32)) + bytes([127])
@@ -464,23 +518,20 @@ class HeaderMap(CaseInsensitiveDict):
         transmitting on the wire for HTTP.
         """
         for k, v in header_items:
-            if isinstance(k, six.text_type):
-                k = cls.encode(k)
+            if not isinstance(v, six.string_types):
+                v = six.text_type(v)
 
-            if not isinstance(v, text_or_bytes):
-                v = str(v)
+            yield tuple(map(cls.encode_header_item, (k, v)))
 
-            if isinstance(v, six.text_type):
-                v = cls.encode(v)
+    @classmethod
+    def encode_header_item(cls, item):
+        if isinstance(item, six.text_type):
+            item = cls.encode(item)
 
-            # See header_translate_* constants above.
-            # Replace only if you really know what you're doing.
-            k = k.translate(header_translate_table,
-                            header_translate_deletechars)
-            v = v.translate(header_translate_table,
-                            header_translate_deletechars)
-
-            yield (k, v)
+        # See header_translate_* constants above.
+        # Replace only if you really know what you're doing.
+        return item.translate(
+            header_translate_table, header_translate_deletechars)
 
     @classmethod
     def encode(cls, v):
@@ -498,7 +549,7 @@ class HeaderMap(CaseInsensitiveDict):
             # because we never want to fold lines--folding has
             # been deprecated by the HTTP working group.
             v = b2a_base64(v.encode('utf-8'))
-            return (ntob('=?utf-8?b?') + v.strip(ntob('\n')) + ntob('?='))
+            return (b'=?utf-8?b?' + v.strip(b'\n') + b'?=')
 
         raise ValueError('Could not encode header part %r using '
                          'any of the encodings %r.' %

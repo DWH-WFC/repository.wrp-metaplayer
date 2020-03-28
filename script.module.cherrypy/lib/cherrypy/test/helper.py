@@ -15,11 +15,12 @@ import portend
 import pytest
 import six
 
+from cheroot.test import webtest
+
 import cherrypy
-from cherrypy._cpcompat import text_or_bytes, copyitems, HTTPSConnection, ntob
+from cherrypy._cpcompat import text_or_bytes, HTTPSConnection, ntob
 from cherrypy.lib import httputil
 from cherrypy.lib import gctools
-from cherrypy.test import webtest
 
 log = logging.getLogger(__name__)
 thisdir = os.path.abspath(os.path.dirname(__file__))
@@ -37,7 +38,8 @@ class Supervisor(object):
             setattr(self, k, v)
 
 
-log_to_stderr = lambda msg, level: sys.stderr.write(msg + os.linesep)
+def log_to_stderr(msg, level):
+    return sys.stderr.write(msg + os.linesep)
 
 
 class LocalSupervisor(Supervisor):
@@ -91,7 +93,8 @@ class LocalSupervisor(Supervisor):
 
         cherrypy.engine.exit()
 
-        for name, server in copyitems(getattr(cherrypy, 'servers', {})):
+        servers_copy = list(six.iteritems(getattr(cherrypy, 'servers', {})))
+        for name, server in servers_copy:
             server.unsubscribe()
             del cherrypy.servers[name]
 
@@ -341,7 +344,7 @@ class CPWebCase(webtest.WebCase):
         epage = re.escape(page)
         epage = epage.replace(
             esc('<pre id="traceback"></pre>'),
-            esc('<pre id="traceback">') + ntob('(.*)') + esc('</pre>'))
+            esc('<pre id="traceback">') + b'(.*)' + esc('</pre>'))
         m = re.match(epage, self.body, re.DOTALL)
         if not m:
             self._handlewebError(
@@ -387,7 +390,9 @@ def _test_method_sorter(_, x, y):
     if x < y:
         return -1
     return 0
-unittest.TestLoader.sortTestMethodsUsing = _test_method_sorter  # noqa: E305
+
+
+unittest.TestLoader.sortTestMethodsUsing = _test_method_sorter
 
 
 def setup_client():
@@ -452,11 +457,11 @@ server.ssl_private_key: r'%s'
 
         args = [
             '-m',
-            'cherrypy.__main__',  # __main__ is needed for `-m` in Python 2.6
+            'cherrypy',
             '-c', self.config_file,
             '-p', self.pid_file,
         ]
-        """
+        r"""
         Command for running cherryd server with autoreload enabled
 
         Using

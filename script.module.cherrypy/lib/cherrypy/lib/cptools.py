@@ -5,6 +5,7 @@ import re
 from hashlib import md5
 
 import six
+from six.moves import urllib
 
 import cherrypy
 from cherrypy._cpcompat import text_or_bytes
@@ -195,10 +196,8 @@ def proxy(base=None, local='X-Forwarded-Host', remote='X-Forwarded-For',
         if lbase is not None:
             base = lbase.split(',')[0]
     if not base:
-        base = request.headers.get('Host', '127.0.0.1')
-        port = request.local.port
-        if port != 80:
-            base += ':%s' % port
+        default = urllib.parse.urlparse(request.base).netloc
+        base = request.headers.get('Host', default)
 
     if base.find('://') == -1:
         # add http:// or https:// if needed
@@ -212,8 +211,8 @@ def proxy(base=None, local='X-Forwarded-Host', remote='X-Forwarded-For',
             cherrypy.log('Testing remote %r:%r' % (remote, xff), 'TOOLS.PROXY')
         if xff:
             if remote == 'X-Forwarded-For':
-                # Bug #1268
-                xff = xff.split(',')[0].strip()
+                # Grab the first IP in a comma-separated list. Ref #1268.
+                xff = next(ip.strip() for ip in xff.split(','))
             request.remote.ip = xff
 
 
@@ -240,7 +239,9 @@ def response_headers(headers=None, debug=False):
                      'TOOLS.RESPONSE_HEADERS')
     for name, value in (headers or []):
         cherrypy.serving.response.headers[name] = value
-response_headers.failsafe = True  # noqa: E305
+
+
+response_headers.failsafe = True
 
 
 def referer(pattern, accept=True, accept_missing=False, error=403,
@@ -409,7 +410,9 @@ def session_auth(**kwargs):
     for k, v in kwargs.items():
         setattr(sa, k, v)
     return sa.run()
-session_auth.__doc__ = (  # noqa: E305
+
+
+session_auth.__doc__ = (
     """Session authentication hook.
 
     Any attribute of the SessionAuth class may be overridden via a keyword arg
@@ -586,26 +589,13 @@ def accept(media=None, debug=False):
 
 class MonitoredHeaderMap(_httputil.HeaderMap):
 
+    def transform_key(self, key):
+        self.accessed_headers.add(key)
+        return super(MonitoredHeaderMap, self).transform_key(key)
+
     def __init__(self):
         self.accessed_headers = set()
-
-    def __getitem__(self, key):
-        self.accessed_headers.add(key)
-        return _httputil.HeaderMap.__getitem__(self, key)
-
-    def __contains__(self, key):
-        self.accessed_headers.add(key)
-        return _httputil.HeaderMap.__contains__(self, key)
-
-    def get(self, key, default=None):
-        self.accessed_headers.add(key)
-        return _httputil.HeaderMap.get(self, key, default=default)
-
-    if hasattr({}, 'has_key'):
-        # Python 2
-        def has_key(self, key):
-            self.accessed_headers.add(key)
-            return _httputil.HeaderMap.has_key(self, key)  # noqa: W601
+        super(MonitoredHeaderMap, self).__init__()
 
 
 def autovary(ignore=None, debug=False):

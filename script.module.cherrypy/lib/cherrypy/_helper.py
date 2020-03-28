@@ -1,19 +1,17 @@
-"""
-Helper functions for CP apps
-"""
+"""Helper functions for CP apps."""
 
 import six
+from six.moves import urllib
 
-from cherrypy._cpcompat import urljoin as _urljoin, urlencode as _urlencode
 from cherrypy._cpcompat import text_or_bytes
 
 import cherrypy
 
 
 def expose(func=None, alias=None):
-    """
-    Expose the function or class, optionally providing
-    an alias or set of aliases.
+    """Expose the function or class.
+
+    Optionally provide an alias or set of aliases.
     """
     def expose_(func):
         func.exposed = True
@@ -59,8 +57,9 @@ def expose(func=None, alias=None):
 
 
 def popargs(*args, **kwargs):
-    """A decorator for _cp_dispatch
-    (cherrypy.dispatch.Dispatcher.dispatch_method_name).
+    """Decorate _cp_dispatch.
+
+    (cherrypy.dispatch.Dispatcher.dispatch_method_name)
 
     Optional keyword argument: handler=(Object or Function)
 
@@ -136,7 +135,6 @@ def popargs(*args, **kwargs):
             #...
 
     """
-
     # Since keyword arg comes after *args, we have to process it ourselves
     # for lower versions of python.
 
@@ -219,7 +217,7 @@ def url(path='', qs='', script_name=None, base=None, relative=None):
     relative to the server root; i.e., it will start with a slash.
     """
     if isinstance(qs, (tuple, list, dict)):
-        qs = _urlencode(qs)
+        qs = urllib.parse.urlencode(qs)
     if qs:
         qs = '?' + qs
 
@@ -239,7 +237,7 @@ def url(path='', qs='', script_name=None, base=None, relative=None):
             if path == '':
                 path = pi
             else:
-                path = _urljoin(pi, path)
+                path = urllib.parse.urljoin(pi, path)
 
         if script_name is None:
             script_name = cherrypy.request.script_name
@@ -287,6 +285,7 @@ def url(path='', qs='', script_name=None, base=None, relative=None):
 
 
 def normalize_path(path):
+    """Resolve given path from relative into absolute form."""
     if './' not in path:
         return path
 
@@ -309,3 +308,37 @@ def normalize_path(path):
         newpath = '/' + newpath
 
     return newpath
+
+
+####
+# Inlined from jaraco.classes 1.4.3
+# Ref #1673
+class _ClassPropertyDescriptor(object):
+    """Descript for read-only class-based property.
+
+    Turns a classmethod-decorated func into a read-only property of that class
+    type (means the value cannot be set).
+    """
+
+    def __init__(self, fget, fset=None):
+        """Initialize a class property descriptor.
+
+        Instantiated by ``_helper.classproperty``.
+        """
+        self.fget = fget
+        self.fset = fset
+
+    def __get__(self, obj, klass=None):
+        """Return property value."""
+        if klass is None:
+            klass = type(obj)
+        return self.fget.__get__(obj, klass)()
+
+
+def classproperty(func):  # noqa: D401; irrelevant for properties
+    """Decorator like classmethod to implement a static class property."""
+    if not isinstance(func, (classmethod, staticmethod)):
+        func = classmethod(func)
+
+    return _ClassPropertyDescriptor(func)
+####

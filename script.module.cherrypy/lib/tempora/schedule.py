@@ -13,6 +13,8 @@ import bisect
 
 import pytz
 
+__metaclass__ = type
+
 
 def now():
     """
@@ -41,9 +43,11 @@ class DelayedCommand(datetime.datetime):
 
     @classmethod
     def from_datetime(cls, other):
-        return cls(other.year, other.month, other.day, other.hour,
+        return cls(
+            other.year, other.month, other.day, other.hour,
             other.minute, other.second, other.microsecond,
-            other.tzinfo)
+            other.tzinfo,
+        )
 
     @classmethod
     def after(cls, delay, target):
@@ -87,16 +91,35 @@ class PeriodicCommand(DelayedCommand):
     Like a delayed command, but expect this command to run every delay
     seconds.
     """
+    def _next_time(self):
+        """
+        Add delay to self, localized
+        """
+        return self._localize(self + self.delay)
+
+    @staticmethod
+    def _localize(dt):
+        """
+        Rely on pytz.localize to ensure new result honors DST.
+        """
+        try:
+            tz = dt.tzinfo
+            return tz.localize(dt.replace(tzinfo=None))
+        except AttributeError:
+            return dt
+
     def next(self):
-        cmd = self.__class__.from_datetime(self + self.delay)
+        cmd = self.__class__.from_datetime(self._next_time())
         cmd.delay = self.delay
         cmd.target = self.target
         return cmd
 
     def __setattr__(self, key, value):
         if key == 'delay' and not value > datetime.timedelta():
-            raise ValueError("A PeriodicCommand must have a positive, "
-                "non-zero delay.")
+            raise ValueError(
+                "A PeriodicCommand must have a positive, "
+                "non-zero delay."
+            )
         super(PeriodicCommand, self).__setattr__(key, value)
 
 
@@ -111,7 +134,7 @@ class PeriodicCommandFixedDelay(PeriodicCommand):
     def at_time(cls, at, delay, target):
         at = cls._from_timestamp(at)
         cmd = cls.from_datetime(at)
-        if not isinstance(delay, datetime.timedelta):
+        if isinstance(delay, numbers.Number):
             delay = datetime.timedelta(seconds=delay)
         cmd.delay = delay
         cmd.target = target
@@ -127,10 +150,10 @@ class PeriodicCommandFixedDelay(PeriodicCommand):
         when = datetime.datetime.combine(datetime.date.today(), at)
         if when < now():
             when += daily
-        return cls.at_time(when, daily, target)
+        return cls.at_time(cls._localize(when), daily, target)
 
 
-class Scheduler(object):
+class Scheduler:
     """
     A rudimentary abstract scheduler accepting DelayedCommands
     and dispatching them on schedule.
@@ -177,4 +200,3 @@ class CallbackScheduler(Scheduler):
 
     def run(self, command):
         self.dispatch(command.target)
-

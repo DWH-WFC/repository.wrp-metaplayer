@@ -5,7 +5,7 @@ import io
 import six
 
 import cherrypy
-from cherrypy._cpcompat import text_or_bytes, ntob
+from cherrypy._cpcompat import text_or_bytes
 from cherrypy.lib import file_generator
 from cherrypy.lib import is_closable_iterator
 from cherrypy.lib import set_vary_header
@@ -220,19 +220,7 @@ class ResponseEncoder:
         response = cherrypy.serving.response
         self.body = self.oldhandler(*args, **kwargs)
 
-        if isinstance(self.body, text_or_bytes):
-            # strings get wrapped in a list because iterating over a single
-            # item list is much faster than iterating over every character
-            # in a long string.
-            if self.body:
-                self.body = [self.body]
-            else:
-                # [''] doesn't evaluate to False, so replace it with [].
-                self.body = []
-        elif hasattr(self.body, 'read'):
-            self.body = file_generator(self.body)
-        elif self.body is None:
-            self.body = []
+        self.body = prepare_iter(self.body)
 
         ct = response.headers.elements('Content-Type')
         if self.debug:
@@ -269,6 +257,29 @@ class ResponseEncoder:
 
         return self.body
 
+
+def prepare_iter(value):
+    """
+    Ensure response body is iterable and resolves to False when empty.
+    """
+    if isinstance(value, text_or_bytes):
+        # strings get wrapped in a list because iterating over a single
+        # item list is much faster than iterating over every character
+        # in a long string.
+        if value:
+            value = [value]
+        else:
+            # [''] doesn't evaluate to False, so replace it with [].
+            value = []
+    # Don't use isinstance here; io.IOBase which has an ABC takes
+    # 1000 times as long as, say, isinstance(value, str)
+    elif hasattr(value, 'read'):
+        value = file_generator(value)
+    elif value is None:
+        value = []
+    return value
+
+
 # GZIP
 
 
@@ -277,15 +288,15 @@ def compress(body, compress_level):
     import zlib
 
     # See http://www.gzip.org/zlib/rfc-gzip.html
-    yield ntob('\x1f\x8b')       # ID1 and ID2: gzip marker
-    yield ntob('\x08')           # CM: compression method
-    yield ntob('\x00')           # FLG: none set
+    yield b'\x1f\x8b'       # ID1 and ID2: gzip marker
+    yield b'\x08'           # CM: compression method
+    yield b'\x00'           # FLG: none set
     # MTIME: 4 bytes
     yield struct.pack('<L', int(time.time()) & int('FFFFFFFF', 16))
-    yield ntob('\x02')           # XFL: max compression, slowest algo
-    yield ntob('\xff')           # OS: unknown
+    yield b'\x02'           # XFL: max compression, slowest algo
+    yield b'\xff'           # OS: unknown
 
-    crc = zlib.crc32(ntob(''))
+    crc = zlib.crc32(b'')
     size = 0
     zobj = zlib.compressobj(compress_level,
                             zlib.DEFLATED, -zlib.MAX_WBITS,

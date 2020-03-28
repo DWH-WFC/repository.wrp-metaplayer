@@ -13,7 +13,7 @@ import io
 import six
 
 import cherrypy as _cherrypy
-from cherrypy._cpcompat import ntob, ntou
+from cherrypy._cpcompat import ntou
 from cherrypy import _cperror
 from cherrypy.lib import httputil
 from cherrypy.lib import is_closable_iterator
@@ -192,7 +192,7 @@ class _TrappedResponse(object):
             raise
         except StopIteration:
             raise
-        except:
+        except Exception:
             tb = _cperror.format_exc()
             _cherrypy.log(tb, severity=40)
             if not _cherrypy.request.show_tracebacks:
@@ -213,7 +213,7 @@ class _TrappedResponse(object):
 
             try:
                 self.start_response(s, h, _sys.exc_info())
-            except:
+            except Exception:
                 # "The application must not trap any exceptions raised by
                 # start_response, if it called start_response with exc_info.
                 # Instead, it should allow such exceptions to propagate
@@ -223,7 +223,7 @@ class _TrappedResponse(object):
                 raise
 
             if self.started_response:
-                return ntob('').join(b)
+                return b''.join(b)
             else:
                 return b
 
@@ -275,7 +275,7 @@ class AppResponse(object):
 
             self.iter_response = iter(r.body)
             self.write = start_response(outstatus, outheaders)
-        except:
+        except BaseException:
             self.close()
             raise
 

@@ -6,16 +6,16 @@ import sys
 import time
 
 import six
+from six.moves import urllib
+from six.moves.http_client import BadStatusLine, HTTPConnection, NotConnected
+
 import pytest
 
+from cheroot.test import webtest
+
 import cherrypy
-from cherrypy._cpcompat import (
-    HTTPConnection, HTTPSConnection,
-    NotConnected, BadStatusLine,
-    ntob, tonative,
-    urlopen,
-)
-from cherrypy.test import helper, webtest
+from cherrypy._cpcompat import HTTPSConnection, ntob, tonative
+from cherrypy.test import helper
 
 
 timeout = 1
@@ -304,7 +304,7 @@ class PipelineTests(helper.CPWebCase):
         conn = self.HTTP_CONN
         conn.auto_open = False
         conn.connect()
-        conn.send(ntob('GET /hello HTTP/1.1'))
+        conn.send(b'GET /hello HTTP/1.1')
         conn.send(('Host: %s' % self.HOST).encode('ascii'))
 
         # Wait for our socket timeout
@@ -337,7 +337,7 @@ class PipelineTests(helper.CPWebCase):
         self.assertBody(str(timeout))
 
         # Make a second request on the same socket
-        conn._output(ntob('GET /hello HTTP/1.1'))
+        conn._output(b'GET /hello HTTP/1.1')
         conn._output(ntob('Host: %s' % self.HOST, 'ascii'))
         conn._send_output()
         response = conn.response_class(conn.sock, method='GET')
@@ -350,13 +350,13 @@ class PipelineTests(helper.CPWebCase):
         time.sleep(timeout * 2)
 
         # Make another request on the same socket, which should error
-        conn._output(ntob('GET /hello HTTP/1.1'))
+        conn._output(b'GET /hello HTTP/1.1')
         conn._output(ntob('Host: %s' % self.HOST, 'ascii'))
         conn._send_output()
         response = conn.response_class(conn.sock, method='GET')
         try:
             response.begin()
-        except:
+        except Exception:
             if not isinstance(sys.exc_info()[1],
                               (socket.error, BadStatusLine)):
                 self.fail("Writing to timed out socket didn't fail"
@@ -383,13 +383,13 @@ class PipelineTests(helper.CPWebCase):
 
         # Make another request on the same socket,
         # but timeout on the headers
-        conn.send(ntob('GET /hello HTTP/1.1'))
+        conn.send(b'GET /hello HTTP/1.1')
         # Wait for our socket timeout
         time.sleep(timeout * 2)
         response = conn.response_class(conn.sock, method='GET')
         try:
             response.begin()
-        except:
+        except Exception:
             if not isinstance(sys.exc_info()[1],
                               (socket.error, BadStatusLine)):
                 self.fail("Writing to timed out socket didn't fail"
@@ -431,7 +431,7 @@ class PipelineTests(helper.CPWebCase):
 
         for trial in range(5):
             # Put next request
-            conn._output(ntob('GET /hello HTTP/1.1'))
+            conn._output(b'GET /hello HTTP/1.1')
             conn._output(ntob('Host: %s' % self.HOST, 'ascii'))
             conn._send_output()
 
@@ -439,21 +439,21 @@ class PipelineTests(helper.CPWebCase):
             response = conn.response_class(conn.sock, method='GET')
             # there is a bug in python3 regarding the buffering of
             # ``conn.sock``. Until that bug get's fixed we will
-            # monkey patch the ``reponse`` instance.
+            # monkey patch the ``response`` instance.
             # https://bugs.python.org/issue23377
             if six.PY3:
                 response.fp = conn.sock.makefile('rb', 0)
             response.begin()
             body = response.read(13)
             self.assertEqual(response.status, 200)
-            self.assertEqual(body, ntob('Hello, world!'))
+            self.assertEqual(body, b'Hello, world!')
 
         # Retrieve final response
         response = conn.response_class(conn.sock, method='GET')
         response.begin()
         body = response.read()
         self.assertEqual(response.status, 200)
-        self.assertEqual(body, ntob('Hello, world!'))
+        self.assertEqual(body, b'Hello, world!')
 
         conn.close()
 
@@ -506,7 +506,7 @@ class PipelineTests(helper.CPWebCase):
                     break
 
             # ...send the body
-            body = ntob('I am a small file')
+            body = b'I am a small file'
             conn.send(body)
 
             # ...get the final response
@@ -566,11 +566,11 @@ class ConnectionTests(helper.CPWebCase):
             self.assertStatus(500)
 
             # Now try a working page with an Expect header...
-            conn._output(ntob('POST /upload HTTP/1.1'))
+            conn._output(b'POST /upload HTTP/1.1')
             conn._output(ntob('Host: %s' % self.HOST, 'ascii'))
-            conn._output(ntob('Content-Type: text/plain'))
-            conn._output(ntob('Content-Length: 17'))
-            conn._output(ntob('Expect: 100-continue'))
+            conn._output(b'Content-Type: text/plain')
+            conn._output(b'Content-Length: 17')
+            conn._output(b'Expect: 100-continue')
             conn._send_output()
             response = conn.response_class(conn.sock, method='POST')
 
@@ -583,7 +583,7 @@ class ConnectionTests(helper.CPWebCase):
                     break
 
             # ...send the body
-            body = ntob('I am a small file')
+            body = b'I am a small file'
             conn.send(body)
 
             # ...get the final response
@@ -654,7 +654,7 @@ class ConnectionTests(helper.CPWebCase):
         response = conn.getresponse()
         self.status, self.headers, self.body = webtest.shb(response)
         self.assertStatus('200 OK')
-        self.assertBody("thanks for '%s'" % ntob('xx\r\nxxxxyyyyy'))
+        self.assertBody("thanks for '%s'" % b'xx\r\nxxxxyyyyy')
 
         # Try a chunked request that exceeds server.max_request_body_size.
         # Note that the delimiters and trailer are included.
@@ -723,8 +723,13 @@ class ConnectionTests(helper.CPWebCase):
         conn.close()
 
     def test_598(self):
-        remote_data_conn = urlopen('%s://%s:%s/one_megabyte_of_a/' %
-                                   (self.scheme, self.HOST, self.PORT,))
+        tmpl = '{scheme}://{host}:{port}/one_megabyte_of_a/'
+        url = tmpl.format(
+            scheme=self.scheme,
+            host=self.HOST,
+            port=self.PORT,
+        )
+        remote_data_conn = urllib.request.urlopen(url)
         buf = remote_data_conn.read(512)
         time.sleep(timeout * 0.6)
         remaining = (1024 * 1024) - 512
@@ -796,7 +801,8 @@ class LimitedRequestQueueTests(helper.CPWebCase):
                 conn.endheaders()
                 conns.append(conn)
 
-            # Now try a 16th conn, which should be closed by the server immediately.
+            # Now try a 16th conn, which should be closed by the
+            # server immediately.
             overflow_conn = self.HTTP_CONN(self.HOST, self.PORT)
             # Manually connect since httplib won't let us set a timeout
             for res in socket.getaddrinfo(self.HOST, self.PORT, 0,
@@ -810,7 +816,10 @@ class LimitedRequestQueueTests(helper.CPWebCase):
             overflow_conn.putrequest('GET', '/', skip_host=True)
             overflow_conn.putheader('Host', self.HOST)
             overflow_conn.endheaders()
-            response = overflow_conn.response_class(overflow_conn.sock, method='GET')
+            response = overflow_conn.response_class(
+                overflow_conn.sock,
+                method='GET',
+            )
             try:
                 response.begin()
             except socket.error as exc:
@@ -830,7 +839,7 @@ class LimitedRequestQueueTests(helper.CPWebCase):
                 raise AssertionError('Overflow conn did not get RST ')
         finally:
             for conn in conns:
-                conn.send(ntob('done'))
+                conn.send(b'done')
                 response = conn.response_class(conn.sock, method='POST')
                 response.begin()
                 self.body = response.read()
@@ -848,7 +857,7 @@ class BadRequestTests(helper.CPWebCase):
         self.persistent = True
 
         conn = self.HTTP_CONN
-        conn.send(ntob('GET /hello HTTP/1.1\n\n'))
+        conn.send(b'GET /hello HTTP/1.1\n\n')
         response = conn.response_class(conn.sock, method='GET')
         response.begin()
         self.body = response.read()
@@ -856,7 +865,7 @@ class BadRequestTests(helper.CPWebCase):
         conn.close()
 
         conn.connect()
-        conn.send(ntob('GET /hello HTTP/1.1\r\n\n'))
+        conn.send(b'GET /hello HTTP/1.1\r\n\n')
         response = conn.response_class(conn.sock, method='GET')
         response.begin()
         self.body = response.read()

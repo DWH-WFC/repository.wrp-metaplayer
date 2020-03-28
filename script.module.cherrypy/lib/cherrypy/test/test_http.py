@@ -1,3 +1,4 @@
+# coding: utf-8
 """Tests for managing HTTP issues (malformed requests, etc)."""
 
 import errno
@@ -7,24 +8,57 @@ import sys
 from unittest import mock
 
 import six
+from six.moves.http_client import HTTPConnection
+from six.moves import urllib
 
 import cherrypy
-from cherrypy._cpcompat import HTTPConnection, HTTPSConnection, ntob
+from cherrypy._cpcompat import HTTPSConnection, quote
 
 from cherrypy.test import helper
+
+
+def is_ascii(text):
+    """
+    Return True if the text encodes as ascii.
+    """
+    try:
+        text.encode('ascii')
+        return True
+    except Exception:
+        pass
+    return False
+
+
+def encode_filename(filename):
+    """
+    Given a filename to be used in a multipart/form-data,
+    encode the name. Return the key and encoded filename.
+    """
+    if is_ascii(filename):
+        return 'filename', '"{filename}"'.format(**locals())
+    encoded = quote(filename, encoding='utf-8')
+    return 'filename*', "'".join((
+        'UTF-8',
+        '',  # lang
+        encoded,
+    ))
 
 
 def encode_multipart_formdata(files):
     """Return (content_type, body) ready for httplib.HTTP instance.
 
     files: a sequence of (name, filename, value) tuples for multipart uploads.
+    filename can be a string or a tuple ('filename string', 'encoding')
     """
     BOUNDARY = '________ThIs_Is_tHe_bouNdaRY_$'
     L = []
     for key, filename, value in files:
         L.append('--' + BOUNDARY)
-        L.append('Content-Disposition: form-data; name="%s"; filename="%s"' %
-                 (key, filename))
+
+        fn_key, encoded = encode_filename(filename)
+        tmpl = \
+            'Content-Disposition: form-data; name="{key}"; {fn_key}={encoded}'
+        L.append(tmpl.format(**locals()))
         ct = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
         L.append('Content-Type: %s' % ct)
         L.append('')
@@ -104,7 +138,7 @@ class HTTPTests(helper.CPWebCase):
         self.body = response.fp.read()
         self.status = str(response.status)
         self.assertStatus(200)
-        self.assertBody(ntob('Hello world!'))
+        self.assertBody(b'Hello world!')
 
         # Now send a message that has no Content-Length, but does send a body.
         # Verify that CP times out the socket and responds
@@ -115,7 +149,11 @@ class HTTPTests(helper.CPWebCase):
             c = HTTPConnection('%s:%s' % (self.interface(), self.PORT))
 
         # `_get_content_length` is needed for Python 3.6+
-        with mock.patch.object(c, '_get_content_length', lambda body, method: None, create=True):
+        with mock.patch.object(
+                c,
+                '_get_content_length',
+                lambda body, method: None,
+                create=True):
             # `_set_content_length` is needed for Python 2.7-3.5
             with mock.patch.object(c, '_set_content_length', create=True):
                 c.request('POST', '/')
@@ -147,16 +185,21 @@ class HTTPTests(helper.CPWebCase):
         self.body = response.fp.read()
         self.status = str(response.status)
         self.assertStatus(200)
-        self.assertBody(', '.join(['%s * 65536' % c for c in alphabet]))  # noqa: F812
+        parts = ['%s * 65536' % ch for ch in alphabet]
+        self.assertBody(', '.join(parts))
 
     def test_post_filename_with_special_characters(self):
         '''Testing that we can handle filenames with special characters. This
         was reported as a bug in:
            https://github.com/cherrypy/cherrypy/issues/1146/
-           https://github.com/cherrypy/cherrypy/issues/1397'''
+           https://github.com/cherrypy/cherrypy/issues/1397/
+           https://github.com/cherrypy/cherrypy/issues/1694/
+        '''
         # We'll upload a bunch of files with differing names.
-        fnames = ['boop.csv', 'foo, bar.csv', 'bar, xxxx.csv', 'file"name.csv',
-                  'file;name.csv', 'file; name.csv']
+        fnames = [
+            'boop.csv', 'foo, bar.csv', 'bar, xxxx.csv', 'file"name.csv',
+            'file;name.csv', 'file; name.csv', u'test_łóąä.txt',
+        ]
         for fname in fnames:
             files = [('myfile', fname, 'yunyeenyunyue')]
             content_type, body = encode_multipart_formdata(files)
@@ -182,7 +225,7 @@ class HTTPTests(helper.CPWebCase):
 
         # Test missing version in Request-Line
         c = self.make_connection()
-        c._output(ntob('GET /'))
+        c._output(b'geT /')
         c._send_output()
         if hasattr(c, 'strict'):
             response = c.response_class(c.sock, strict=c.strict, method='GET')
@@ -192,15 +235,19 @@ class HTTPTests(helper.CPWebCase):
             response = c.response_class(c.sock, method='GET')
         response.begin()
         self.assertEqual(response.status, 400)
-        self.assertEqual(response.fp.read(22), ntob('Malformed Request-Line'))
+        self.assertEqual(response.fp.read(22), b'Malformed Request-Line')
         c.close()
 
     def test_request_line_split_issue_1220(self):
-        Request_URI = (
-            '/index?intervenant-entreprise-evenement_classaction=evenement-mailremerciements'
-            '&_path=intervenant-entreprise-evenement&intervenant-entreprise-evenement_action-id=19404'
-            '&intervenant-entreprise-evenement_id=19404&intervenant-entreprise_id=28092'
-        )
+        params = {
+            'intervenant-entreprise-evenement_classaction':
+                'evenement-mailremerciements',
+            '_path': 'intervenant-entreprise-evenement',
+            'intervenant-entreprise-evenement_action-id': 19404,
+            'intervenant-entreprise-evenement_id': 19404,
+            'intervenant-entreprise_id': 28092,
+        }
+        Request_URI = '/index?' + urllib.parse.urlencode(params)
         self.assertEqual(len('GET %s HTTP/1.1\r\n' % Request_URI), 256)
         self.getPage(Request_URI)
         self.assertBody('Hello world!')
@@ -210,7 +257,7 @@ class HTTPTests(helper.CPWebCase):
         c.putrequest('GET', '/')
         c.putheader('Content-Type', 'text/plain')
         # See https://github.com/cherrypy/cherrypy/issues/941
-        c._output(ntob('Re, 1.2.3.4#015#012'))
+        c._output(b're, 1.2.3.4#015#012')
         c.endheaders()
 
         response = c.getresponse()
@@ -244,14 +291,14 @@ class HTTPTests(helper.CPWebCase):
     def test_garbage_in(self):
         # Connect without SSL regardless of server.scheme
         c = HTTPConnection('%s:%s' % (self.interface(), self.PORT))
-        c._output(ntob('gjkgjklsgjklsgjkljklsg'))
+        c._output(b'gjkgjklsgjklsgjkljklsg')
         c._send_output()
         response = c.response_class(c.sock, method='GET')
         try:
             response.begin()
             self.assertEqual(response.status, 400)
             self.assertEqual(response.fp.read(22),
-                             ntob('Malformed Request-Line'))
+                             b'Malformed Request-Line')
             c.close()
         except socket.error:
             e = sys.exc_info()[1]

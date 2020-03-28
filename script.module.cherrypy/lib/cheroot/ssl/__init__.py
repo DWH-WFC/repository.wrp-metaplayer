@@ -1,12 +1,15 @@
 """Implementation of the SSL adapter base interface."""
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 from abc import ABCMeta, abstractmethod
 
 from six import add_metaclass
 
 
 @add_metaclass(ABCMeta)
-class Adapter(object):
+class Adapter:
     """Base class for SSL driver library adapters.
 
     Required methods:
@@ -17,7 +20,9 @@ class Adapter(object):
     """
 
     @abstractmethod
-    def __init__(self, certificate, private_key, certificate_chain=None, ciphers=None):
+    def __init__(
+            self, certificate, private_key, certificate_chain=None,
+            ciphers=None):
         """Set up certificates, private key ciphers and reset context."""
         self.certificate = certificate
         self.private_key = private_key

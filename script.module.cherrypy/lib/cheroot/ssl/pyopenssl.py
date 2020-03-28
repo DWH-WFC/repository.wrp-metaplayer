@@ -31,6 +31,9 @@ and .certificate are both given and valid, they will be read, and the
 context will be automatically created from them.
 """
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 import socket
 import threading
 import time
@@ -93,8 +96,6 @@ class SSL_fileobject(MakeFile):
                     raise errors.NoSSLError()
 
                 raise errors.FatalSSLAlert(*e.args)
-            except:
-                raise
 
             if time.time() - start > self.ssl_timeout:
                 raise socket.timeout('timed out')
@@ -174,12 +175,15 @@ class pyOpenSSLAdapter(Adapter):
     ciphers = None
     """The ciphers list of SSL."""
 
-    def __init__(self, certificate, private_key, certificate_chain=None, ciphers=None):
+    def __init__(
+            self, certificate, private_key, certificate_chain=None,
+            ciphers=None):
         """Initialize OpenSSL Adapter instance."""
         if SSL is None:
             raise ImportError('You must install pyOpenSSL to use HTTPS.')
 
-        super(pyOpenSSLAdapter, self).__init__(certificate, private_key, certificate_chain, ciphers)
+        super(pyOpenSSLAdapter, self).__init__(
+            certificate, private_key, certificate_chain, ciphers)
 
         self._environ = None
 
@@ -197,7 +201,7 @@ class pyOpenSSLAdapter(Adapter):
 
     def get_context(self):
         """Return an SSL.Context from self attributes."""
-        # See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/442473
+        # See https://code.activestate.com/recipes/442473/
         c = SSL.Context(SSL.SSLv23_METHOD)
         c.use_privatekey_file(self.private_key)
         if self.certificate_chain:

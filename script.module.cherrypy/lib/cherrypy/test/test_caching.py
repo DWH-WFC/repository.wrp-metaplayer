@@ -4,10 +4,12 @@ import os
 import threading
 import time
 
+from six.moves import range
+from six.moves import urllib
+
 import pytest
 
 import cherrypy
-from cherrypy._cpcompat import next, ntob, quote, xrange
 from cherrypy.lib import httputil
 
 from cherrypy.test import helper
@@ -15,10 +17,10 @@ from cherrypy.test import helper
 
 curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 
-gif_bytes = ntob(
-    'GIF89a\x01\x00\x01\x00\x82\x00\x01\x99"\x1e\x00\x00\x00\x00\x00'
-    '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-    '\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x02\x03\x02\x08\t\x00;'
+gif_bytes = (
+    b'GIF89a\x01\x00\x01\x00\x82\x00\x01\x99"\x1e\x00\x00\x00\x00\x00'
+    b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+    b'\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x02\x03\x02\x08\t\x00;'
 )
 
 
@@ -126,9 +128,20 @@ class CacheTest(helper.CPWebCase):
                     'Etag'] = 'need_this_to_make_me_cacheable'
                 return 'Woops'
 
+        @cherrypy.config(**{
+            'tools.gzip.mime_types': ['text/*', 'image/*'],
+            'tools.caching.on': True,
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'static',
+            'tools.staticdir.root': curdir
+        })
+        class GzipStaticCache(object):
+            pass
+
         cherrypy.tree.mount(Root())
         cherrypy.tree.mount(UnCached(), '/expires')
         cherrypy.tree.mount(VaryHeaderCachingServer(), '/varying_headers')
+        cherrypy.tree.mount(GzipStaticCache(), '/gzip_static_cache')
         cherrypy.config.update({'tools.gzip.on': True})
 
     def testCaching(self):
@@ -165,7 +178,7 @@ class CacheTest(helper.CPWebCase):
         self.assertHeader('Content-Encoding', 'gzip')
         self.assertHeader('Vary')
         self.assertEqual(
-            cherrypy.lib.encoding.decompress(self.body), ntob('visit #5'))
+            cherrypy.lib.encoding.decompress(self.body), b'visit #5')
 
         # Now check that a second request gets the gzip header and gzipped body
         # This also tests a bug in 3.0 to 3.0.2 whereby the cached, gzipped
@@ -173,7 +186,7 @@ class CacheTest(helper.CPWebCase):
         self.getPage('/', method='GET', headers=[('Accept-Encoding', 'gzip')])
         self.assertHeader('Content-Encoding', 'gzip')
         self.assertEqual(
-            cherrypy.lib.encoding.decompress(self.body), ntob('visit #5'))
+            cherrypy.lib.encoding.decompress(self.body), b'visit #5')
 
         # Now check that a third request that doesn't accept gzip
         # skips the cache (because the 'Vary' header denies it).
@@ -270,6 +283,42 @@ class CacheTest(helper.CPWebCase):
             self.assertHeader('Cache-Control', 'no-cache, must-revalidate')
         self.assertHeader('Expires', 'Sun, 28 Jan 2007 00:00:00 GMT')
 
+    def _assert_resp_len_and_enc_for_gzip(self, uri):
+        """
+        Test that after querying gzipped content it's remains valid in
+        cache and available non-gzipped as well.
+        """
+        ACCEPT_GZIP_HEADERS = [('Accept-Encoding', 'gzip')]
+        content_len = None
+
+        for _ in range(3):
+            self.getPage(uri, method='GET', headers=ACCEPT_GZIP_HEADERS)
+
+            if content_len is not None:
+                # all requests should get the same length
+                self.assertHeader('Content-Length', content_len)
+                self.assertHeader('Content-Encoding', 'gzip')
+
+            content_len = dict(self.headers)['Content-Length']
+
+        # check that we can still get non-gzipped version
+        self.getPage(uri, method='GET')
+        self.assertNoHeader('Content-Encoding')
+        # non-gzipped version should have a different content length
+        self.assertNoHeaderItemValue('Content-Length', content_len)
+
+    def testGzipStaticCache(self):
+        """Test that cache and gzip tools play well together when both enabled.
+
+        Ref GitHub issue #1190.
+        """
+        GZIP_STATIC_CACHE_TMPL = '/gzip_static_cache/{}'
+        resource_files = ('index.html', 'dirback.jpg')
+
+        for f in resource_files:
+            uri = GZIP_STATIC_CACHE_TMPL.format(f)
+            self._assert_resp_len_and_enc_for_gzip(uri)
+
     def testLastModified(self):
         self.getPage('/a.gif')
         self.assertStatus(200)
@@ -300,7 +349,8 @@ class CacheTest(helper.CPWebCase):
         # before the actual stampede.
         self.getPage(slow_url)
         self.assertBody('success!')
-        self.getPage('/clear_cache?path=' + quote(slow_url, safe=''))
+        path = urllib.parse.quote(slow_url, safe='')
+        self.getPage('/clear_cache?path=' + path)
         self.assertStatus(200)
 
         start = datetime.datetime.now()
@@ -309,7 +359,7 @@ class CacheTest(helper.CPWebCase):
             self.getPage(slow_url)
             # The response should be the same every time
             self.assertBody('success!')
-        ts = [threading.Thread(target=run) for i in xrange(100)]
+        ts = [threading.Thread(target=run) for i in range(100)]
         for t in ts:
             t.start()
         for t in ts:

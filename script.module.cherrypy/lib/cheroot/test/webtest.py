@@ -13,24 +13,24 @@ the traceback to stdout, and keep any assertions you have from running
 be of further significance to your tests).
 """
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 import pprint
 import re
 import socket
 import sys
 import time
 import traceback
-import types
 import os
 import json
-
-from imp import reload
-
 import unittest
+import warnings
 
+from six.moves import range, http_client, map, urllib_parse
 import six
 
-from cheroot._compat import text_or_bytes, HTTPConnection
-from cheroot._compat import HTTPSConnection
+from more_itertools.more import always_iterable
 
 
 def interface(host):
@@ -48,109 +48,11 @@ def interface(host):
     return host
 
 
-class TerseTestResult(unittest._TextTestResult):
-
-    def printErrors(self):
-        # Overridden to avoid unnecessary empty line
-        if self.errors or self.failures:
-            if self.dots or self.showAll:
-                self.stream.writeln()
-            self.printErrorList('ERROR', self.errors)
-            self.printErrorList('FAIL', self.failures)
-
-
-class TerseTestRunner(unittest.TextTestRunner):
-    """A test runner class that displays results in textual form."""
-
-    def _makeResult(self):
-        return TerseTestResult(self.stream, self.descriptions, self.verbosity)
-
-    def run(self, test):
-        """Run the given test case or test suite."""
-        # Overridden to remove unnecessary empty lines and separators
-        result = self._makeResult()
-        test(result)
-        result.printErrors()
-        if not result.wasSuccessful():
-            self.stream.write('FAILED (')
-            failed, errored = list(map(len, (result.failures, result.errors)))
-            if failed:
-                self.stream.write('failures=%d' % failed)
-            if errored:
-                if failed:
-                    self.stream.write(', ')
-                self.stream.write('errors=%d' % errored)
-            self.stream.writeln(')')
-        return result
-
-
-class ReloadingTestLoader(unittest.TestLoader):
-
-    def loadTestsFromName(self, name, module=None):
-        """Return a suite of all tests cases given a string specifier.
-
-        The name may resolve either to a module, a test case class, a
-        test method within a test case class, or a callable object which
-        returns a TestCase or TestSuite instance.
-        The method optionally resolves the names relative to a given module.
-        """
-        parts = name.split('.')
-        unused_parts = []
-        if module is None:
-            if not parts:
-                raise ValueError('incomplete test name: %s' % name)
-            else:
-                parts_copy = parts[:]
-                while parts_copy:
-                    target = '.'.join(parts_copy)
-                    if target in sys.modules:
-                        module = reload(sys.modules[target])
-                        parts = unused_parts
-                        break
-                    else:
-                        try:
-                            module = __import__(target)
-                            parts = unused_parts
-                            break
-                        except ImportError:
-                            unused_parts.insert(0, parts_copy[-1])
-                            del parts_copy[-1]
-                            if not parts_copy:
-                                raise
-                parts = parts[1:]
-        obj = module
-        for part in parts:
-            obj = getattr(obj, part)
-
-        if isinstance(obj, types.ModuleType):
-            return self.loadTestsFromModule(obj)
-        elif (
-                (
-                    (six.PY3 and isinstance(obj, type)) or
-                    isinstance(obj, (type, types.ClassType))
-                ) and
-                issubclass(obj, unittest.TestCase)):
-            return self.loadTestsFromTestCase(obj)
-        elif isinstance(obj, types.UnboundMethodType):
-            if six.PY3:
-                return obj.__self__.__class__(obj.__name__)
-            else:
-                return obj.im_class(obj.__name__)
-        elif hasattr(obj, '__call__'):
-            test = obj()
-            if not isinstance(test, unittest.TestCase) and \
-               not isinstance(test, unittest.TestSuite):
-                raise ValueError('calling %s returned %s, '
-                                 'not a test' % (obj, test))
-            return test
-        else:
-            raise ValueError('do not know how to make test from: %s' % obj)
-
-
 try:
     # Jython support
     if sys.platform[:4] == 'java':
         def getchar():
+            """Get a key press."""
             # Hopefully this is enough
             return sys.stdin.read(1)
     else:
@@ -158,6 +60,7 @@ try:
         import msvcrt
 
         def getchar():
+            """Get a key press."""
             return msvcrt.getch()
 except ImportError:
     # Unix getchr
@@ -165,6 +68,7 @@ except ImportError:
     import termios
 
     def getchar():
+        """Get a key press."""
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:
@@ -176,22 +80,28 @@ except ImportError:
 
 
 # from jaraco.properties
-class NonDataProperty(object):
+class NonDataProperty:
+    """Non-data property decorator."""
+
     def __init__(self, fget):
+        """Initialize a non-data property."""
         assert fget is not None, 'fget cannot be none'
         assert callable(fget), 'fget must be callable'
         self.fget = fget
 
     def __get__(self, obj, objtype=None):
+        """Return a class property."""
         if obj is None:
             return self
         return self.fget(obj)
 
 
 class WebCase(unittest.TestCase):
+    """Helper web test suite base."""
+
     HOST = '127.0.0.1'
     PORT = 8000
-    HTTP_CONN = HTTPConnection
+    HTTP_CONN = http_client.HTTPConnection
     PROTOCOL = 'HTTP/1.1'
 
     scheme = 'http'
@@ -205,13 +115,18 @@ class WebCase(unittest.TestCase):
 
     time = None
 
+    @property
+    def _Conn(self):
+        """Return HTTPConnection or HTTPSConnection based on self.scheme.
+
+        * from http.client.
+        """
+        cls_name = '{scheme}Connection'.format(scheme=self.scheme.upper())
+        return getattr(http_client, cls_name)
+
     def get_conn(self, auto_open=False):
         """Return a connection to our HTTP server."""
-        if self.scheme == 'https':
-            cls = HTTPSConnection
-        else:
-            cls = HTTPConnection
-        conn = cls(self.interface(), self.PORT)
+        conn = self._Conn(self.interface(), self.PORT)
         # Automatically re-connect?
         conn.auto_open = auto_open
         conn.connect()
@@ -221,30 +136,30 @@ class WebCase(unittest.TestCase):
         """Make our HTTP_CONN persistent (or not).
 
         If the 'on' argument is True (the default), then self.HTTP_CONN
-        will be set to an instance of HTTPConnection (or HTTPS
-        if self.scheme is "https"). This will then persist across requests.
-        We only allow for a single open connection, so if you call this
-        and we currently have an open connection, it will be closed.
+        will be set to an instance of HTTP(S)?Connection
+        to persist across requests.
+        As this class only allows for a single open connection, if
+        self already has an open connection, it will be closed.
         """
         try:
             self.HTTP_CONN.close()
         except (TypeError, AttributeError):
             pass
 
-        if on:
-            self.HTTP_CONN = self.get_conn(auto_open=auto_open)
-        else:
-            if self.scheme == 'https':
-                self.HTTP_CONN = HTTPSConnection
-            else:
-                self.HTTP_CONN = HTTPConnection
+        self.HTTP_CONN = (
+            self.get_conn(auto_open=auto_open)
+            if on
+            else self._Conn
+        )
 
-    def _get_persistent(self):
+    @property
+    def persistent(self):  # noqa: D401; irrelevant for properties
+        """Presense of the persistent HTTP connection."""
         return hasattr(self.HTTP_CONN, '__class__')
 
-    def _set_persistent(self, on):
+    @persistent.setter
+    def persistent(self, on):
         self.set_persistent(on)
-    persistent = property(_get_persistent, _set_persistent)
 
     def interface(self):
         """Return an IP address for a client connection.
@@ -257,6 +172,21 @@ class WebCase(unittest.TestCase):
     def getPage(self, url, headers=None, method='GET', body=None,
                 protocol=None, raise_subcls=None):
         """Open the url with debugging support. Return status, headers, body.
+
+        url should be the identifier passed to the server, typically a
+        server-absolute path and query string (sent between method and
+        protocol), and should only be an absolute URI if proxy support is
+        enabled in the server.
+
+        If the application under test generates absolute URIs, be sure
+        to wrap them first with strip_netloc::
+
+            class MyAppWebCase(WebCase):
+                def getPage(url, *args, **kwargs):
+                    super(MyAppWebCase, self).getPage(
+                        cheroot.test.webtest.strip_netloc(url),
+                        *args, **kwargs
+                    )
 
         `raise_subcls` must be a tuple with the exceptions classes
         or a single exception class that are not going to be considered
@@ -296,7 +226,14 @@ class WebCase(unittest.TestCase):
         False or 1 or 0.
         """
         env_str = os.environ.get('WEBTEST_INTERACTIVE', 'True')
-        return bool(json.loads(env_str.lower()))
+        is_interactive = bool(json.loads(env_str.lower()))
+        if is_interactive:
+            warnings.warn(
+                'Interactive test failure interceptor support via '
+                'WEBTEST_INTERACTIVE environment variable is deprecated.',
+                DeprecationWarning
+            )
+        return is_interactive
 
     console_height = 30
 
@@ -342,41 +279,36 @@ class WebCase(unittest.TestCase):
             elif i == 'R':
                 raise self.failureException(msg)
             elif i == 'X':
-                self.exit()
+                sys.exit()
             sys.stdout.write(p)
             sys.stdout.flush()
 
-    def exit(self):
-        sys.exit()
+    @property
+    def status_code(self):  # noqa: D401; irrelevant for properties
+        """Integer HTTP status code."""
+        return int(self.status[:3])
+
+    def status_matches(self, expected):
+        """Check whether actual status matches expected."""
+        actual = (
+            self.status_code
+            if isinstance(expected, int) else
+            self.status
+        )
+        return expected == actual
 
     def assertStatus(self, status, msg=None):
-        """Fail if self.status != status."""
-        if isinstance(status, text_or_bytes):
-            if not self.status == status:
-                if msg is None:
-                    msg = 'Status (%r) != %r' % (self.status, status)
-                self._handlewebError(msg)
-        elif isinstance(status, int):
-            code = int(self.status[:3])
-            if code != status:
-                if msg is None:
-                    msg = 'Status (%r) != %r' % (self.status, status)
-                self._handlewebError(msg)
-        else:
-            # status is a tuple or list.
-            match = False
-            for s in status:
-                if isinstance(s, text_or_bytes):
-                    if self.status == s:
-                        match = True
-                        break
-                elif int(self.status[:3]) == s:
-                    match = True
-                    break
-            if not match:
-                if msg is None:
-                    msg = 'Status (%r) not in %r' % (self.status, status)
-                self._handlewebError(msg)
+        """Fail if self.status != status.
+
+        status may be integer code, exact string status, or
+        iterable of allowed possibilities.
+        """
+        if any(map(self.status_matches, always_iterable(status))):
+            return
+
+        tmpl = 'Status {self.status} does not match {status}'
+        msg = msg or tmpl.format(**locals())
+        self._handlewebError(msg)
 
     def assertHeader(self, key, value=None, msg=None):
         """Fail if (key, [value]) not in self.headers."""
@@ -424,6 +356,16 @@ class WebCase(unittest.TestCase):
         if matches:
             if msg is None:
                 msg = '%r in headers' % key
+            self._handlewebError(msg)
+
+    def assertNoHeaderItemValue(self, key, value, msg=None):
+        """Fail if the header contains the specified value."""
+        lowkey = key.lower()
+        hdrs = self.headers
+        matches = [k for k, v in hdrs if k.lower() == lowkey and v == value]
+        if matches:
+            if msg is None:
+                msg = '%r:%r in %r' % (key, value, hdrs)
             self._handlewebError(msg)
 
     def assertBody(self, value, msg=None):
@@ -524,7 +466,7 @@ def shb(response):
 
 
 def openURL(url, headers=None, method='GET', body=None,
-            host='127.0.0.1', port=8000, http_conn=HTTPConnection,
+            host='127.0.0.1', port=8000, http_conn=http_client.HTTPConnection,
             protocol='HTTP/1.1', raise_subcls=None):
     """
     Open the given HTTP resource and return status, headers, and body.
@@ -580,6 +522,30 @@ def openURL(url, headers=None, method='GET', body=None,
                     raise
 
 
+def strip_netloc(url):
+    """Return absolute-URI path from URL.
+
+    Strip the scheme and host from the URL, returning the
+    server-absolute portion.
+
+    Useful for wrapping an absolute-URI for which only the
+    path is expected (such as in calls to getPage).
+
+    >>> strip_netloc('https://google.com/foo/bar?bing#baz')
+    '/foo/bar?bing'
+
+    >>> strip_netloc('//google.com/foo/bar?bing#baz')
+    '/foo/bar?bing'
+
+    >>> strip_netloc('/foo/bar?bing#baz')
+    '/foo/bar?bing'
+    """
+    parsed = urllib_parse.urlparse(url)
+    scheme, netloc, path, params, query, fragment = parsed
+    stripped = '', '', path, params, query, ''
+    return urllib_parse.urlunparse(stripped)
+
+
 # Add any exceptions which your web framework handles
 # normally (that you don't want server_error to trap).
 ignored_exceptions = []
@@ -591,6 +557,8 @@ ignore_all = False
 
 
 class ServerError(Exception):
+    """Exception for signalling server error."""
+
     on = False
 
 
