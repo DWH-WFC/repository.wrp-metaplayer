@@ -177,13 +177,13 @@
         <setting label="32820" type="lsep" />
         <setting id="exclude.path.option_1" type="bool" label="32821" default="true" />
         <setting id="exclude.path.type_1" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
-        <setting id="exclude.path.folder_1" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="special://home/userdata/addon_data/plugin.video.wrp-metaplayer/Movies/" />
+        <setting id="exclude.path.folder_1" type="folder" label="32826" default="special://home/userdata/addon_data/plugin.video.wrp-metaplayer/Movies/" visible="eq(-2,true)+eq(-1,0)" source="" />
         <setting id="exclude.path.prefix_1" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_1" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_2" type="bool" label="32829" default="true" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_2" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
-        <setting id="exclude.path.folder_2" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="special://home/userdata/addon_data/plugin.video.wrp-metaplayer/TVShows/" />
+        <setting id="exclude.path.folder_2" type="folder" label="32826" default="special://home/userdata/addon_data/plugin.video.wrp-metaplayer/TVShows/" visible="eq(-2,true)+eq(-1,0)" source="" />
         <setting id="exclude.path.prefix_2" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_2" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
