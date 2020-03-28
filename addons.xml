@@ -83,7 +83,7 @@ MfG WRP Team
   </extension>
 </addon>
 
-<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.9~nightly4" provider-name="DWH">
+<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.9" provider-name="DWH">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="metadata.tvdb.com" version="3.0.14"/>
@@ -131,70 +131,101 @@ MfG WRP Team
         <source>Source Code from Chaapai by Mr.Blamo and OpenMeta by OpenProject</source>
         <news>THX an Kasi45 für deine super Hilfe
 
+[B]Version 1.0.9 Release[/B]
+
+- Update Translations
+- Add new WRP Metaplayer Trakt API Client
+- Add New TV Shows (Trakt)
+- Allow sorting of lists by list add date
+- Trakt Collection sort by added
+- updateManager fixed THX Kasi45
+- Update updateManager
+- added fixedzipfile
+- Update TVDb Key
+
+
 [B]Version 1.0.9~nightly4[/B]
+
 - Add new WRP Metaplayer Trakt API Client
 - Add New TV Shows (Trakt)
 - Allow sorting of lists by list add date
 - Trakt Collection sort by added
 
 [B]Version 1.0.9~nightly3[/B]
+
 - updateManager fixed THX Kasi45
 
 [B]Version 1.0.9~nightly2[/B]
+
 - Update updateManager
 - added fixedzipfile
 
 [B]Version 1.0.9~nightly1[/B]
+
 - Update TVDb Key
 
 [B]Version 1.0.8 Release[/B]
+
 - Updatemanger fixed THX an kasi45
 - Update service.py
 - Nur noch Releases über Repository
 - Nightlys bitte im Addon aktivieren bzw. deaktivieren
 
 [B]Version 1.0.8~nighty2[/B]
+
 - Bugfix behoben
 
 [B]Version 1.0.8~nighty1[/B]
+
 - Views geupdated
 - Settings.xml überarbeitet
 
 [B]Version 1.0.7 Release[/B]
+
 - TVDb Fix Serien Suche
 - Filme Menü Suche hinzugefügt für Filme
 - Serien Menü Suche hinzugefügt für Serien
 - Settings.xml überarbeitet
 
 [B]Version 1.0.7~nightly4-8[/B]
+
 - Test
 
 [B]Version 1.0.7~nightly3[/B]
+
 - immer noch total buggy
 
 [B]Version 1.0.7~nightly2[/B]
+
 - total buggy
 
 [B]Version 1.0.7~nightly1[/B]
+
 - Kontextmenü angepasst
 - Updatemanager erweitert
 
 [B]Version 1.0.6[/B]
+
 - WRPinfo integriert
 
 [B]Version 1.0.5~nightly5[/B]
+
 - fix some bugs
 
 [B]Version 1.0.5~nightly4[/B]
+
 - fix menu_items
 
 [B]Version 1.0.5~nightly3[/B]
+
 - fix translations
 
 [B]Version 1.0.5~nightly2[/B]
+
  - fix TMDb
 
 [B]Version 1.0.5~nightly1[/B]
+
  - fix updateManager
 
 [B]Version 1.0.4[/B]
@@ -846,7 +877,7 @@ v0.8.0 (2017-11-08)
 	</extension>
 </addon>
 
-<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5~nightly5" provider-name="DWH">
+<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5" provider-name="DWH">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.pil" version="1.1.7"/>
@@ -883,6 +914,27 @@ v0.8.0 (2017-11-08)
 		</assets>
 		<news>
 
+[B]Version 1.0.5 Release[/B]
+
+ - Actor addon icon background revised
+ - Netflix Skin Clearlogo bugfix
+ - Aura Skin Clearlogo bugfix
+ - Translations
+ - Movie DB Info "Canceled" Update
+ - Artwork Beef Function and Dependencies added
+ - Movie DB Key Update
+ - Translations
+ - Netflix Skin Actor Info revised
+ - Netflix Skin Actor Info Color Highlight included
+ - Netflix Skin Label revised
+ - Netflix Skin Clearlogo revised, Artwork Beef loads images
+ - Netflix Skin revised
+ - Logo resized
+ - Trailer Fullscreen Button revised
+ - Movie DB Certification DE added
+ - Logo revised
+ - Actor Section revised
+
 [B]Version 1.0.5~nightly5[/B]
 
  - Netflix Skin Clearlogo bugfix
@@ -901,6 +953,8 @@ v0.8.0 (2017-11-08)
  - Netflix Skin Clearlogo revised, Artwork Beef loads images
  - Netflix Skin revised
  - Logo resized
+ - addon.xml revised (WRP-Metaplayer)
+ - update Readme.md
 
 [B]Version 1.0.5~nightly3[/B]
 
