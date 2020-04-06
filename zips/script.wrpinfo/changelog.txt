@@ -1,4 +1,9 @@
  
+[B]Version 1.0.6~nightly1[/B]
+
+ - New Addon Icon
+ - Log info fixed
+  
 [B]Version 1.0.5 Release[/B]
 
  - Actor addon icon background revised

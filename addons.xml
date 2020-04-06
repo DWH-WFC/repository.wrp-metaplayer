@@ -1,37 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.program.addons.updater"
-		name="[COLOR blue]Addons Updater[/COLOR]"
-		version="1.0.2.6"
-		provider-name="[COLOR blue]loki1979 | renexyz[/COLOR]">
-	<requires>
-		<import addon="xbmc.python" version="2.7.13" />
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="resources/pys/updater.py">
-		<provides>executable</provides>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-	<summary></summary>
-	<description></description>
-	<disclaimer></disclaimer>
-	<language></language>
-	<platform>all</platform>
-	<license></license>
-	<forum></forum>
-	<website></website>
-	<email></email>
-	<source></source>
-	<news></news>
-	<assets>
-		<icon>resources/icon.png</icon>
-		<fanart>resources/fanart.jpg</fanart>
-		<banner></banner>
-		<clearlogo></clearlogo>
-		<screenshot></screenshot>
-	</assets>
-	</extension>
-</addon>
-
 <addon id="plugin.program.wrp.manager" name="WRP Kodi Build Manager" version="2.0.1" provider-name="DWH">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -83,7 +51,7 @@ MfG WRP Team
   </extension>
 </addon>
 
-<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.9" provider-name="DWH">
+<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.10~nightly1" provider-name="DWH">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="metadata.tvdb.com" version="3.0.14"/>
@@ -115,8 +83,8 @@ MfG WRP Team
         <summary lang="en">TMDb, TVDb and Trakt surface with player support</summary>
         <description lang="en">Browse The MovieDb, The TVDb, Trakt and pass info along to library or an addon. Needs player-files and the appropriate addon to play the files.</description>
         <assets>
-            <icon>resources/art/icon.png</icon>
-            <fanart>resources/art/fanart.jpg</fanart>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
             <screenshot>resources/art/screenshot001.jpg</screenshot>
             <screenshot>resources/art/screenshot002.jpg</screenshot>
             <screenshot>resources/art/screenshot003.jpg</screenshot>
@@ -131,129 +99,14 @@ MfG WRP Team
         <source>Source Code from Chaapai by Mr.Blamo and OpenMeta by OpenProject</source>
         <news>THX an Kasi45 für deine super Hilfe
 
-[B]Version 1.0.9 Release[/B]
+[B]Version 1.0.10~nightly1[/B]
 
-- Update Translations
-- Add new WRP Metaplayer Trakt API Client
-- Add New TV Shows (Trakt)
-- Allow sorting of lists by list add date
-- Trakt Collection sort by added
-- updateManager fixed THX Kasi45
-- Update updateManager
-- added fixedzipfile
-- Update TVDb Key
+- fixed updateManager.py for manual updates
+- fixed menu_items.py for new icons
+- new icons
+- new addon icon
 
-
-[B]Version 1.0.9~nightly4[/B]
-
-- Add new WRP Metaplayer Trakt API Client
-- Add New TV Shows (Trakt)
-- Allow sorting of lists by list add date
-- Trakt Collection sort by added
-
-[B]Version 1.0.9~nightly3[/B]
-
-- updateManager fixed THX Kasi45
-
-[B]Version 1.0.9~nightly2[/B]
-
-- Update updateManager
-- added fixedzipfile
-
-[B]Version 1.0.9~nightly1[/B]
-
-- Update TVDb Key
-
-[B]Version 1.0.8 Release[/B]
-
-- Updatemanger fixed THX an kasi45
-- Update service.py
-- Nur noch Releases über Repository
-- Nightlys bitte im Addon aktivieren bzw. deaktivieren
-
-[B]Version 1.0.8~nighty2[/B]
-
-- Bugfix behoben
-
-[B]Version 1.0.8~nighty1[/B]
-
-- Views geupdated
-- Settings.xml überarbeitet
-
-[B]Version 1.0.7 Release[/B]
-
-- TVDb Fix Serien Suche
-- Filme Menü Suche hinzugefügt für Filme
-- Serien Menü Suche hinzugefügt für Serien
-- Settings.xml überarbeitet
-
-[B]Version 1.0.7~nightly4-8[/B]
-
-- Test
-
-[B]Version 1.0.7~nightly3[/B]
-
-- immer noch total buggy
-
-[B]Version 1.0.7~nightly2[/B]
-
-- total buggy
-
-[B]Version 1.0.7~nightly1[/B]
-
-- Kontextmenü angepasst
-- Updatemanager erweitert
-
-[B]Version 1.0.6[/B]
-
-- WRPinfo integriert
-
-[B]Version 1.0.5~nightly5[/B]
-
-- fix some bugs
-
-[B]Version 1.0.5~nightly4[/B]
-
-- fix menu_items
-
-[B]Version 1.0.5~nightly3[/B]
-
-- fix translations
-
-[B]Version 1.0.5~nightly2[/B]
-
- - fix TMDb
-
-[B]Version 1.0.5~nightly1[/B]
-
- - fix updateManager
-
-[B]Version 1.0.4[/B]
-
-- Sprachen Auswahl für TMDb und TVDb
-- updateManager für WRP-MetaPlayer und UrlResolver
-    ( unter Einstellungen / Aktualisierungen )
-- some fixes
-
-[B]Version 1.0.3[/B]
-
-- Update Übersetzungen
-- Update Funktion der Player Aktualisierung
-
-[B]Version 1.0.2[/B]
-
-- Update Übersetzungen
-- Überflüssigen Programm Code entfernt
-
-[B]Version 1.0.1[/B]
-
-- Übersetzungen in deutsch angepasst
-- Tmdb und TVDB Links für deutschen Content überarbeitet
-- Player Dateien erstellt und integriert
-
-[B]Version 1.0[/B]
-
-- Initial Release
+[I]Read changelog for more informations![/I]
         </news>
         <platform>all</platform>
     </extension>
@@ -303,259 +156,6 @@ MfG WRP Team
             <screenshot></screenshot>
         </assets>
    	</extension>
-</addon>
-
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.28.2~adev" provider-name="rmrector">
-	<requires>
-		<import addon="xbmc.python" version="2.19.0" />
-		<import addon="xbmc.json" version="6.20.0" />
-		<import addon="script.module.simplejson" version="3.3.0" />
-		<import addon="script.module.requests" version="2.9.1" />
-		<import addon="script.common.plugin.cache" version="2.5.8" />
-	</requires>
-	<extension point="xbmc.python.script" library="default.py">
-		<provides>executable</provides>
-	</extension>
-	<extension point="kodi.context.item">
-		<menu id="kodi.core.main">
-			<menu id="kodi.core.manage">
-				<item library="context.py">
-					<label>AB: $ADDON[script.artwork.beef 32410]</label>
-					<visible>!Skin.HasSetting(disablecontext:script.artwork.beef) + [StringCompare(ListItem.DBTYPE, movie) | StringCompare(ListItem.DBTYPE, set) | StringCompare(ListItem.DBTYPE, tvshow) | StringCompare(ListItem.DBTYPE, episode) | StringCompare(ListItem.DBTYPE, musicvideo) | String.IsEqual(ListItem.DBTYPE, movie) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, episode) | String.IsEqual(ListItem.DBTYPE, musicvideo)]</visible>
-				</item>
-				<item library="context_gui.py">
-					<label>AB: $ADDON[script.artwork.beef 32411]</label>
-					<visible>!Skin.HasSetting(disablecontext:script.artwork.beef) + [StringCompare(ListItem.DBTYPE, movie) | StringCompare(ListItem.DBTYPE, set) | StringCompare(ListItem.DBTYPE, tvshow) | StringCompare(ListItem.DBTYPE, episode) | StringCompare(ListItem.DBTYPE, musicvideo) | String.IsEqual(ListItem.DBTYPE, movie) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, episode) | String.IsEqual(ListItem.DBTYPE, musicvideo)]</visible>
-				</item>
-				<item library="context_debug_remove.py">
-					<label>AB: $ADDON[script.artwork.beef 32427]</label>
-					<visible>Skin.HasSetting(enablecontext:script.artwork.beef.debug) + [StringCompare(ListItem.DBTYPE, movie) | StringCompare(ListItem.DBTYPE, set) | StringCompare(ListItem.DBTYPE, tvshow) | StringCompare(ListItem.DBTYPE, episode) | StringCompare(ListItem.DBTYPE, musicvideo) | StringCompare(ListItem.DBTYPE, season) | String.IsEqual(ListItem.DBTYPE, movie) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, episode) | String.IsEqual(ListItem.DBTYPE, musicvideo) | StringCompare(ListItem.DBTYPE, season)]</visible>
-				</item>
-				<item library="context_debug_logitem.py">
-					<label>AB: $ADDON[script.artwork.beef 32430]</label>
-					<visible>Skin.HasSetting(enablecontext:script.artwork.beef.debug) + [StringCompare(ListItem.DBTYPE, movie) | StringCompare(ListItem.DBTYPE, set) | StringCompare(ListItem.DBTYPE, tvshow) | StringCompare(ListItem.DBTYPE, episode) | StringCompare(ListItem.DBTYPE, musicvideo) | String.IsEqual(ListItem.DBTYPE, movie) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, episode) | String.IsEqual(ListItem.DBTYPE, musicvideo)]</visible>
-				</item>
-			</menu>
-			<item library="context.py">
-				<label>AB: $ADDON[script.artwork.beef 32410]</label>
-				<visible>!Skin.HasSetting(disablecontext:script.artwork.beef) + [String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)] + [String.IsEqual(ListItem.DBTYPE, artist) | String.IsEqual(ListItem.DBTYPE, album) | String.IsEqual(ListItem.DBTYPE, song)]</visible>
-			</item>
-			<item library="context_gui.py">
-				<label>AB: $ADDON[script.artwork.beef 32411]</label>
-				<visible>!Skin.HasSetting(disablecontext:script.artwork.beef) + [String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)] + [String.IsEqual(ListItem.DBTYPE, artist) | String.IsEqual(ListItem.DBTYPE, album) | String.IsEqual(ListItem.DBTYPE, song)]</visible>
-			</item>
-			<item library="context_debug_remove.py">
-				<label>AB: $ADDON[script.artwork.beef 32427]</label>
-				<visible>Skin.HasSetting(enablecontext:script.artwork.beef.debug) + [String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)] + [String.IsEqual(ListItem.DBTYPE, artist) | String.IsEqual(ListItem.DBTYPE, album) | String.IsEqual(ListItem.DBTYPE, song)]</visible>
-			</item>
-			<item library="context_debug_logitem.py">
-				<label>AB: $ADDON[script.artwork.beef 32430]</label>
-				<visible>Skin.HasSetting(enablecontext:script.artwork.beef.debug) + [String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)] + [String.IsEqual(ListItem.DBTYPE, artist) | String.IsEqual(ListItem.DBTYPE, album) | String.IsEqual(ListItem.DBTYPE, song)]</visible>
-			</item>
-		</menu>
-	</extension>
-	<extension point="xbmc.service" start="login" library="service.py" />
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Automatically adds extra artwork for your media.</summary>
-		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
-		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB, KyraDB</disclaimer>
-		<summary lang="es">Agrega automáticamente ilustraciones adicionales para sus medios.</summary>
-		<description lang="es">Artwork Beef agrega automáticamente ilustraciones adicionales para Series TV y Películas a su biblioteca. Las ilustraciones son agregadas desde Servicios web y el Sistema de archivos local.</description>
-		<disclaimer lang="es">Fuente para ilustraciones: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB, KyraDB</disclaimer>
-		<news>
-v0.28.0 (2020-02-08)
-- Feature: Add "Path exclusion" settings to skip processing media items by path
-
-v0.27.1 (2019-11-16)
-- Fix: add-on crash when unexpected results received from TheTVDB
-- Fix: get more descriptive error messages from some web service errors
-
-v0.27.0 (2019-10-13)
-- Feature: sort KyraDB results by 'likes'
-		</news>
-		<source>https://github.com/rmrector/script.artwork.beef</source>
-		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
-		<website>https://rmrector.github.io/script.artwork.beef/</website>
-		<license>The MIT License</license>
-		<platform>all</platform>
-		<assets>
-			<icon>icon.png</icon>
-		</assets>
-	</extension>
-</addon>
-
-<addon id="script.artwork.helper" name="Artwork Helper" version="0.9.2~adev" provider-name="rrector">
-	<requires>
-		<import addon="xbmc.python" version="2.19.0" />
-		<import addon="xbmc.json" version="6.20.0" />
-		<import addon="xbmc.addon" version="17.0.0" />
-	</requires>
-	<extension point="xbmc.python.library" library="python/default.py" />
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Artwork Helper provides a couple of tools to skins and other add-ons for working with artwork.</summary>
-		<description lang="en">Artwork Helper provides a couple of tools to skins and other add-ons for working with artwork. See README.md for detailed usage.</description>
-		<disclaimer lang="en">Artwork Helper does not directly add functionality on its own and must be supported by skins or other add-ons.</disclaimer>
-		<source>https://github.com/rmrector/script.artwork.helper</source>
-		<forum>https://forum.kodi.tv/showthread.php?tid=236649</forum>
-		<news>
-v0.9.1 (2019-06-15)
-- Fix: add an image mime type so Kodi identifies image URLs without extensions
-- Fix: Kodi v19 Pyton 3 compatibility
-
-v0.9.0 (2018-03-25)
-- Feature: add a path to grab artwork from the currently playing item
-- Feature: add path option to grab artwork from multiple artists
-
-v0.8.0 (2017-11-08)
-- Update for Leia compatibility, Krypton is now lowest supported
-- remove `shuffle`
-		</news>
-		<license>The MIT License</license>
-		<platform>all</platform>
-		<language />
-		<website />
-		<email />
-		<assets />
-	</extension>
-</addon>
-
-<addon id="script.module.arrow"
-       name="arrow"
-       version="0.15.5"
-       provider-name="crsmithdev, Razzeee">
-  <requires>
-    <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="script.module.dateutil" version="2.8.1"/>
-    <import addon="script.module.backports.functools_lru_cache" version="1.5.0"/>
-  </requires>
-  <extension point="xbmc.python.module"
-             library="lib" />
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">Arrow: better dates and times for Python</summary>
-    <description lang="en">Packed for Kodi from https://github.com/crsmithdev/arrow</description>
-    <platform>all</platform>
-    <license>Apache2</license>
-    <source>https://github.com/Razzeee/script.module.arrow</source>
-    <email>beenje AT gmail.com</email>
-    <assets>
-      <icon>icon.png</icon>
-    </assets>
-  </extension>
-</addon>
-
-<addon id="script.module.autocompletion" name="AutoCompletion library" version="1.1.2" provider-name="Philipp Temminghoff (phil65)">
-    <requires>
-        <import addon="xbmc.python" version="2.24.0" />
-        <import addon="script.module.simplejson" version="3.3.0"/>
-    </requires>
-    <extension point="xbmc.python.module" library="lib" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en">Module providing some AutoCompletion functions</summary>
-        <description lang="en">Module providing some AutoCompletion functions</description>
-        <platform>all</platform>
-        <license>GNU GENERAL PUBLIC LICENSE Version 2.1, February 1999</license>
-        <source>https://github.com/phil65/script.module.autocompletion</source>
-    </extension>
-</addon>
-
-<addon id="script.module.backports.functools_lru_cache"
-       name="backports.functools_lru_cache"
-       version="1.6.1"
-       provider-name="Jason R. Coombs">
-  <requires>
-    <import addon="xbmc.python" version="2.14.0"/>
-  </requires>
-  <extension point="xbmc.python.module"
-             library="lib" />
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">Backport of functools.lru_cache from Python 3.3</summary>
-    <description lang="en">Packed for Kodi from https://github.com/jaraco/backports.functools_lru_cache</description>
-    <platform>all</platform>
-    <license>MIT</license>
-    <website>https://github.com/jaraco/backports.functools_lru_cache</website>
-    <source>https://github.com/Razzeee/script.module.backports.functools_lru_cache</source>
-  </extension>
-</addon>
-
-<addon id="script.module.beautifulsoup"
-       name="BeautifulSoup"
-       version="3.2.1"
-       provider-name="Leonard Richardson (leonardr@segfault.org)">
-  <requires>
-    <import addon="xbmc.python"
-    		version="2.1.0"/>
-  </requires>
-  <extension point="xbmc.python.module"
-             library="lib" />
-  <extension point="xbmc.addon.metadata">
-    <summary>HTML/XML parser for quick-turnaround applications like screen-scraping</summary>
-    <description>Beautiful Soup parses arbitrarily invalid SGML and provides a variety of methods and Pythonic idioms for iterating and searching the parse tree.</description>
-    <license>BSD</license>
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="script.module.beautifulsoup4"
-       name="BeautifulSoup4"
-       version="4.7.1"
-       provider-name="Leonard Richardson (leonardr@segfault.org)">
-  <requires>
-    <import addon="xbmc.python"
-             version="2.25.0"/>
-  </requires>
-  <extension point="xbmc.python.module"
-             library="lib" />
-  <extension point="xbmc.addon.metadata">
-    <summary>HTML/XML parser for quick-turnaround applications like screen-scraping</summary>
-    <description>Beautiful Soup parses arbitrarily invalid SGML and provides a variety of methods and Pythonic idioms for iterating and searching the parse tree.</description>
-    <license>BSD</license>
-    <platform>all</platform>
-    <website>https://pypi.org/project/beautifulsoup4/</website>
-  </extension>
-</addon>
-
-<addon id="script.module.certifi"
-       name="certifi"
-       version="2019.9.11"
-       provider-name="Kenneth Reitz">
-  <requires>
-    <import addon="xbmc.python" version="2.25.0"/>
-  </requires>
-  <extension point="xbmc.python.module"
-             library="lib" />
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en_GB">Python package for providing Mozilla's CA Bundle.</summary>
-    <description lang="en_GB">Certifi is a carefully curated collection of Root Certificates for validating the trustworthiness of SSL certificates while verifying the identity of TLS hosts. It has been extracted from the Requests project.</description>
-    <license>MPL-2.0</license>
-    <website>https://certifi.io</website>
-    <source>https://github.com/certifi/python-certifi</source>
-    <email>freso.dk AT gmail.com</email>
-    <assets>
-      <icon>resources/icon.png</icon>
-    </assets>
-  </extension>
-</addon>
-
-<addon id="script.module.chardet"
-       name="chardet"
-       version="3.0.4"
-       provider-name="Dan Blanchard">
-  <requires>
-    <import addon="xbmc.python" version="2.25.0"/>
-  </requires>
-  <extension point="xbmc.python.module"
-             library="lib" />
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en_GB">Universal encoding detector</summary>
-    <description lang="en_GB">Packed for Kodi from https://github.com/chardet/chardet</description>
-    <license>LGPL</license>
-    <platform>all</platform>
-    <language></language>
-    <forum></forum>
-    <website>https://chardet.readthedocs.io/en/latest/</website>
-    <source>https://github.com/beenje/script.module.chardet</source>
-    <email>beenje AT gmail.com</email>
-  </extension>
 </addon>
 
 <addon id="script.module.cherrypy"
@@ -877,7 +477,7 @@ v0.8.0 (2017-11-08)
 	</extension>
 </addon>
 
-<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5" provider-name="DWH">
+<addon id="script.wrpinfo" name="WRPInfo" version="1.0.6~nightly1" provider-name="DWH">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.pil" version="1.1.7"/>
@@ -903,122 +503,23 @@ v0.8.0 (2017-11-08)
 	<extension point="xbmc.addon.metadata">
 		<reuselanguageinvoker>false</reuselanguageinvoker>
 		<platform>all</platform>
-		<summary>Fork des ExtendedInfo Skript´s von phil65 und OpenInfo Addon</summary>
+		<summary>TMDb Addon zum Anzeigen von Film und TV Serien Informationen</summary>
 		<description>Dieses Skript bietet verschiedene Möglichkeiten zum Anzeigen von Online-Inhalten in Kodi, sowie einen vollständigen MovieDB-Browser mit Info-Dialogen für verschiedene Medientypen. Das Skript benötigt eine Skin-Implementierung für viele Funktionen und den WRP-MetaPlayer für Bibliotheksfunktionen.</description>
 		<assets>
-			<icon>resources/art/icon.png</icon>
-			<fanart>resources/art/fanart.jpg</fanart>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
 			<screenshot>resources/art/screenshot1.jpg</screenshot>
 			<screenshot>resources/art/screenshot2.jpg</screenshot>
 			<screenshot>resources/art/screenshot3.jpg</screenshot>
 		</assets>
 		<news>
 
-[B]Version 1.0.5 Release[/B]
+[B]Version 1.0.6~nightly1[/B]
 
- - Actor addon icon background revised
- - Netflix Skin Clearlogo bugfix
- - Aura Skin Clearlogo bugfix
- - Translations
- - Movie DB Info "Canceled" Update
- - Artwork Beef Function and Dependencies added
- - Movie DB Key Update
- - Translations
- - Netflix Skin Actor Info revised
- - Netflix Skin Actor Info Color Highlight included
- - Netflix Skin Label revised
- - Netflix Skin Clearlogo revised, Artwork Beef loads images
- - Netflix Skin revised
- - Logo resized
- - Trailer Fullscreen Button revised
- - Movie DB Certification DE added
- - Logo revised
- - Actor Section revised
+ - New Addon Icon
+ - Log info fixed
 
-[B]Version 1.0.5~nightly5[/B]
-
- - Netflix Skin Clearlogo bugfix
- - Aura Skin Clearlogo bugfix
- - Translations
- - Movie DB Info "Canceled" Update
- - Artwork Beef Function and Dependencies added
-
-[B]Version 1.0.5~nightly4[/B]
-
- - Movie DB Key Update
- - Translations
- - Netflix Skin Actor Info revised
- - Netflix Skin Actor Info Color Highlight included
- - Netflix Skin Label revised
- - Netflix Skin Clearlogo revised, Artwork Beef loads images
- - Netflix Skin revised
- - Logo resized
- - addon.xml revised (WRP-Metaplayer)
- - update Readme.md
-
-[B]Version 1.0.5~nightly3[/B]
-
- - Trailer Fullscreen Button revised
- - Movie DB Certification DE added
-
-[B]Version 1.0.5~nightly2[/B]
-
- - Logo revised
- - Actor Section revised
-
-[B]Version 1.0.5~nightly1[/B]
-
- - addon.xml überarbeitet (WRP-Metaplayer)
- - update Readme.md
-
-[B]Version 1.0.4 Release[/B]
-
- - Übersetung überarbeitet
- - bugfixes
- - Update Multigenres
-
-[B]Version 1.0.4~nightly4[/B]
-
- - Netflix Skin überarbeitet
- - Skins Anpassung für Aeon Nox Silvo, Aura, Aura Mod, Estuary
-
-
-[B]Version 1.0.4~nightly3[/B]
-
- - Netflix Skin überarbeitet
- - Skins überarbeitet
- - Skin Bug entfernt
-
-[B]Version 1.0.4~nightly2[/B]
-
- - Netflix Skin überarbeitet
- - Netflix Actor Info hinzugefügt
- - Übersetzungen in deutsch
-
-[B]Version 1.0.4~nightly1[/B]
-
- - Skins angepasst
- - Übersetzungen in deutsch
-
-[B]Version 1.0.3[/B]
-
- - Skins angepasst
-
-[B]Version 1.0.2[/B]
-
- - Bibliotheks Fehler behoben
- - Skins angepasst
- - Übersetzungen in deutsch
-
-[B]Version 1.0.1[/B]
-
- - WRP-MetaPlayer integriert
- - Pfade angepasst
- - Übersetzungen in deutsch
-
-[B]Version 1.0.0[/B]
-
- - Initial Release
+[I]Read changelog for more informations![/I]
 		</news>
 	</extension>
 </addon>

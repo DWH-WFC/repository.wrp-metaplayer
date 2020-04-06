@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.wrpinfo" name="WRPInfo" version="1.0.5" provider-name="DWH">
+<addon id="script.wrpinfo" name="WRPInfo" version="1.0.6~nightly1" provider-name="DWH">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.pil" version="1.1.7"/>
@@ -25,122 +25,23 @@
 	<extension point="xbmc.addon.metadata">
 		<reuselanguageinvoker>false</reuselanguageinvoker>
 		<platform>all</platform>
-		<summary>Fork des ExtendedInfo Skript´s von phil65 und OpenInfo Addon</summary>
+		<summary>TMDb Addon zum Anzeigen von Film und TV Serien Informationen</summary>
 		<description>Dieses Skript bietet verschiedene Möglichkeiten zum Anzeigen von Online-Inhalten in Kodi, sowie einen vollständigen MovieDB-Browser mit Info-Dialogen für verschiedene Medientypen. Das Skript benötigt eine Skin-Implementierung für viele Funktionen und den WRP-MetaPlayer für Bibliotheksfunktionen.</description>
 		<assets>
-			<icon>resources/art/icon.png</icon>
-			<fanart>resources/art/fanart.jpg</fanart>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
 			<screenshot>resources/art/screenshot1.jpg</screenshot>
 			<screenshot>resources/art/screenshot2.jpg</screenshot>
 			<screenshot>resources/art/screenshot3.jpg</screenshot>
 		</assets>
 		<news>
  
-[B]Version 1.0.5 Release[/B]
+[B]Version 1.0.6~nightly1[/B]
 
- - Actor addon icon background revised
- - Netflix Skin Clearlogo bugfix
- - Aura Skin Clearlogo bugfix
- - Translations
- - Movie DB Info "Canceled" Update 
- - Artwork Beef Function and Dependencies added
- - Movie DB Key Update
- - Translations
- - Netflix Skin Actor Info revised
- - Netflix Skin Actor Info Color Highlight included
- - Netflix Skin Label revised
- - Netflix Skin Clearlogo revised, Artwork Beef loads images
- - Netflix Skin revised
- - Logo resized
- - Trailer Fullscreen Button revised
- - Movie DB Certification DE added
- - Logo revised
- - Actor Section revised
+ - New Addon Icon
+ - Log info fixed
  
-[B]Version 1.0.5~nightly5[/B]
-
- - Netflix Skin Clearlogo bugfix
- - Aura Skin Clearlogo bugfix
- - Translations
- - Movie DB Info "Canceled" Update 
- - Artwork Beef Function and Dependencies added
- 
-[B]Version 1.0.5~nightly4[/B]
-
- - Movie DB Key Update
- - Translations
- - Netflix Skin Actor Info revised
- - Netflix Skin Actor Info Color Highlight included
- - Netflix Skin Label revised
- - Netflix Skin Clearlogo revised, Artwork Beef loads images
- - Netflix Skin revised
- - Logo resized
- - addon.xml revised (WRP-Metaplayer)
- - update Readme.md
- 
-[B]Version 1.0.5~nightly3[/B]
-
- - Trailer Fullscreen Button revised
- - Movie DB Certification DE added
- 
-[B]Version 1.0.5~nightly2[/B]
-
- - Logo revised
- - Actor Section revised
-        
-[B]Version 1.0.5~nightly1[/B]
-
- - addon.xml überarbeitet (WRP-Metaplayer)
- - update Readme.md 
-        
-[B]Version 1.0.4 Release[/B]
-
- - Übersetung überarbeitet
- - bugfixes  
- - Update Multigenres 
-        
-[B]Version 1.0.4~nightly4[/B]
-
- - Netflix Skin überarbeitet
- - Skins Anpassung für Aeon Nox Silvo, Aura, Aura Mod, Estuary 
-
- 
-[B]Version 1.0.4~nightly3[/B]
-
- - Netflix Skin überarbeitet
- - Skins überarbeitet 
- - Skin Bug entfernt            
-        
-[B]Version 1.0.4~nightly2[/B]
-
- - Netflix Skin überarbeitet
- - Netflix Actor Info hinzugefügt 
- - Übersetzungen in deutsch        
-        
-[B]Version 1.0.4~nightly1[/B]
-
- - Skins angepasst	
- - Übersetzungen in deutsch
-		
-[B]Version 1.0.3[/B]
-
- - Skins angepasst
-
-[B]Version 1.0.2[/B]
-
- - Bibliotheks Fehler behoben
- - Skins angepasst
- - Übersetzungen in deutsch
-
-[B]Version 1.0.1[/B]
-
- - WRP-MetaPlayer integriert
- - Pfade angepasst
- - Übersetzungen in deutsch
-
-[B]Version 1.0.0[/B]
-
- - Initial Release
+[I]Read changelog for more informations![/I]
 		</news>
 	</extension>
 </addon>

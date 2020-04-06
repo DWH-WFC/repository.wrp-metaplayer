@@ -1,4 +1,11 @@
 
+[B]Version 1.0.10~nightly1[/B]
+
+- fixed updateManager.py for manual updates
+- fixed menu_items.py for new icons
+- new icons
+- new addon icon
+
 [B]Version 1.0.9 Release[/B]
 
 - Update Translations
