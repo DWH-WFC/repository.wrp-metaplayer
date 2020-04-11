@@ -1,4 +1,8 @@
  
+[B]Version 1.0.6~nightly2[/B]
+
+ - Code cleanup
+ 
 [B]Version 1.0.6~nightly1[/B]
 
  - New Addon Icon

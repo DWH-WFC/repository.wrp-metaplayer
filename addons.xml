@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.program.wrp.manager" name="WRP Kodi Build Manager" version="2.0.1" provider-name="DWH">
+<addon id="plugin.program.wrp.manager" name="WRP Kodi Build Manager" version="2.0.2" provider-name="DWH">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="plugin.video.youtube" version="6.2.2"/>
@@ -12,8 +12,8 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="de">WRP Kodi Build Manager</summary>
     <assets>
-        <icon>resources/art/icon.png</icon>
-        <fanart>resources/art/fanart.jpg</fanart>
+        <icon>resources/icon.png</icon>
+        <fanart>resources/fanart.jpg</fanart>
         <screenshot>resources/art/screenshot001.jpg</screenshot>
         <screenshot>resources/art/screenshot002.jpg</screenshot>
         <screenshot>resources/art/screenshot003.jpg</screenshot>
@@ -32,26 +32,18 @@ MfG WRP Team
     <platform>all</platform>
 	<news>
 
-[B]Version 2.0.1[/B]
+[B]Version 2.0.2[/B]
 
-- new install fixed
-- Caches an DB fixed
+- systeminfo fixed
+- library for Backup included
+- The library is not deleted during the new installation
 
-[B]Version 2.0.0[/B]
-
-- from private Addon to public Addon
-- Initial Release
-
-[B]Version 1.8.6[/B]
-
-- download token added
-- uservar angepasst
-
+[I]Read changelog for more informations![/I]
 	</news>
   </extension>
 </addon>
 
-<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.10~nightly1" provider-name="DWH">
+<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.10~nightly2" provider-name="DWH">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="metadata.tvdb.com" version="3.0.14"/>
@@ -99,12 +91,10 @@ MfG WRP Team
         <source>Source Code from Chaapai by Mr.Blamo and OpenMeta by OpenProject</source>
         <news>THX an Kasi45 für deine super Hilfe
 
-[B]Version 1.0.10~nightly1[/B]
+[B]Version 1.0.10~nightly2[/B]
 
-- fixed updateManager.py for manual updates
-- fixed menu_items.py for new icons
-- new icons
-- new addon icon
+- settings.xml fixed
+- path for library changed
 
 [I]Read changelog for more informations![/I]
         </news>
@@ -556,7 +546,7 @@ v0.27.0 (2019-10-13)
 	</extension>
 </addon>
 
-<addon id="script.wrpinfo" name="WRPInfo" version="1.0.6~nightly1" provider-name="DWH">
+<addon id="script.wrpinfo" name="WRPInfo" version="1.0.6~nightly2" provider-name="DWH">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.pil" version="1.1.7"/>
@@ -593,10 +583,9 @@ v0.27.0 (2019-10-13)
 		</assets>
 		<news>
 
-[B]Version 1.0.6~nightly1[/B]
+[B]Version 1.0.6~nightly2[/B]
 
- - New Addon Icon
- - Log info fixed
+ - Code cleanup
 
 [I]Read changelog for more informations![/I]
 		</news>

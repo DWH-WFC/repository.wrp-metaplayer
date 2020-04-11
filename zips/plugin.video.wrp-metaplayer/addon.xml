@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.10~nightly1" provider-name="DWH">
+<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.10~nightly2" provider-name="DWH">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="metadata.tvdb.com" version="3.0.14"/>
@@ -47,12 +47,10 @@
         <source>Source Code from Chaapai by Mr.Blamo and OpenMeta by OpenProject</source>
         <news>THX an Kasi45 für deine super Hilfe
 
-[B]Version 1.0.10~nightly1[/B]
+[B]Version 1.0.10~nightly2[/B]
 
-- fixed updateManager.py for manual updates
-- fixed menu_items.py for new icons
-- new icons
-- new addon icon
+- settings.xml fixed 
+- path for library changed
 
 [I]Read changelog for more informations![/I]
         </news>

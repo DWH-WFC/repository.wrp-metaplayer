@@ -1,3 +1,10 @@
+
+[B]Version 2.0.2[/B]
+
+- systeminfo fixed
+- library for Backup included
+- The library is not deleted during the new installation
+
 [B]Version 2.0.1[/B]
 
 - new install fixed

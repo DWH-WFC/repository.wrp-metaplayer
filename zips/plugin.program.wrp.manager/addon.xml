@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.wrp.manager" name="WRP Kodi Build Manager" version="2.0.1" provider-name="DWH">
+<addon id="plugin.program.wrp.manager" name="WRP Kodi Build Manager" version="2.0.2" provider-name="DWH">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="plugin.video.youtube" version="6.2.2"/>
@@ -11,8 +11,8 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="de">WRP Kodi Build Manager</summary>
     <assets>
-        <icon>resources/art/icon.png</icon>
-        <fanart>resources/art/fanart.jpg</fanart>
+        <icon>resources/icon.png</icon>
+        <fanart>resources/fanart.jpg</fanart>
         <screenshot>resources/art/screenshot001.jpg</screenshot>
         <screenshot>resources/art/screenshot002.jpg</screenshot>
         <screenshot>resources/art/screenshot003.jpg</screenshot>
@@ -31,21 +31,13 @@ MfG WRP Team
     <platform>all</platform>
 	<news>
 
-[B]Version 2.0.1[/B]
+[B]Version 2.0.2[/B]
 
-- new install fixed
-- Caches an DB fixed
+- systeminfo fixed
+- library for Backup included
+- The library is not deleted during the new installation
 
-[B]Version 2.0.0[/B]
-
-- from private Addon to public Addon
-- Initial Release
-
-[B]Version 1.8.6[/B]
-
-- download token added
-- uservar angepasst
-
+[I]Read changelog for more informations![/I]
 	</news>
   </extension>
 </addon>
