@@ -43,7 +43,7 @@ MfG WRP Team
   </extension>
 </addon>
 
-<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.10~nightly2" provider-name="DWH">
+<addon id="plugin.video.wrp-metaplayer" name="WRP-MetaPlayer" version="1.0.10" provider-name="DWH">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="metadata.tvdb.com" version="3.0.14"/>
@@ -91,10 +91,17 @@ MfG WRP Team
         <source>Source Code from Chaapai by Mr.Blamo and OpenMeta by OpenProject</source>
         <news>THX an Kasi45 für deine super Hilfe
 
-[B]Version 1.0.10~nightly2[/B]
+[B]Version 1.0.10[/B]
+
+- Release Version
+
+[B]Version 1.0.10~nightly3[/B]
 
 - settings.xml fixed
 - path for library changed
+- remote library install added
+- delete library added
+- delete settings.xml for folder change added
 
 [I]Read changelog for more informations![/I]
         </news>
@@ -546,7 +553,7 @@ v0.27.0 (2019-10-13)
 	</extension>
 </addon>
 
-<addon id="script.wrpinfo" name="WRPInfo" version="1.0.6~nightly2" provider-name="DWH">
+<addon id="script.wrpinfo" name="WRPInfo" version="1.0.6" provider-name="DWH">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.pil" version="1.1.7"/>
@@ -583,16 +590,16 @@ v0.27.0 (2019-10-13)
 		</assets>
 		<news>
 
-[B]Version 1.0.6~nightly2[/B]
+[B]Version 1.0.6[/B]
 
- - Code cleanup
+ - Release Version
 
 [I]Read changelog for more informations![/I]
 		</news>
 	</extension>
 </addon>
 
-<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.8">
+<addon id="skin.aura.wrp" name="Aura WRP Mod" provider-name="DWH" version="1.0.9">
     <requires>
         <import addon="xbmc.gui" version="5.14.0" />
         <import addon="script.skinshortcuts" version="0.4.0" />
@@ -625,6 +632,10 @@ v0.27.0 (2019-10-13)
             <screenshot>resources/screenshot-05.jpg</screenshot>
         </assets>
         <news>
+[B]Version 1.0.9[/B]
+
+- bugs fixed
+- Icons added
 
 [B]Version 1.0.8[/B]
 

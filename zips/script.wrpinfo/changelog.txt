@@ -1,4 +1,10 @@
  
+[B]Version 1.0.6[/B]
+
+ - Release Version
+ - Netflix Logo changed
+ - Theme revised
+ 
 [B]Version 1.0.6~nightly2[/B]
 
  - Code cleanup

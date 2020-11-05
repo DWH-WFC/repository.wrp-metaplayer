@@ -1,4 +1,21 @@
 
+[B]Version 1.0.10[/B]
+
+- Release Version
+
+[B]Version 1.0.10~nightly3[/B]
+
+- settings.xml fixed 
+- path for library changed
+- remote library install added
+- delete library added
+- delete settings.xml for folder change added
+
+[B]Version 1.0.10~nightly2[/B]
+
+- settings.xml fixed 
+- path for library changed
+
 [B]Version 1.0.10~nightly1[/B]
 
 - fixed updateManager.py for manual updates
